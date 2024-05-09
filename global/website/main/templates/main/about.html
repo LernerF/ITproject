@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>О нас</title>
+    <link rel="stylesheet" href="{% static 'main/css/about.css' %}">
+</head>
+<body>
+    
+    <header>
+
+        <a href="/" class="logo">Galactic Pizza</a>
+
+        <nav>
+            <ul>
+                <li><a href="#">Контакты</a></li>
+                <li><a href="#">Отзывы</a></li>
+                <li><a href="/about">О нас</a></li>
+                <li><a href="#">Меню &Assign;</a>
+                    <ul>
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'user_profile' %}">Личный кабинет</a>
+                        {% else %}
+                            <a href="{% url 'login' %}">Вход</a>
+                            <a href="{% url 'register' %}">Регистрация</a>
+                        {% endif %}
+                        <li><a href="#">Промокоды</a></li>
+                        <li><a href="#">История заказов</a></li>
+                        {% if user.is_authenticated %}
+                            <li><a href="#">Выйти</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+
+    </header>
+    <div class="center">
+        <p>Наши контакты:</p>
+        <ul class="contact-list">
+            <li><a href="https://t.me/+QqGGHGLB_uUzMDcy" class="telegram"><img src="{% static 'main/img/telegram-icon.png' %}" alt="Telegram"> Telegram</a></li>
+            <li><a href="#" class="discord"><img src="{% static 'main/img/discord-icon.png' %}" alt="Discord"> Discord</a></li>
+            <li><a href="https://www.instagram.com/_pizza_galactica_?igsh=bHh6cjFmbmVrcm9m&utm_source=qr" class="instagram"><img src="{% static 'main/img/instagram-icon.png' %}" alt="Instagram"> Instagram</a></li>
+        </ul>
+    </div>
+</body>
+</html>

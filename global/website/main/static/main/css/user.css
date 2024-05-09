@@ -1,0 +1,85 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.profile-card {
+  background-color: #ffffff;
+  height: 500px;
+  width: 400px;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  background-color: #feb339;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.profile-info p {
+  display: flex;
+  justify-content: center; /* Выравнивание по горизонтали */
+  align-items: center;
+}
+
+.profile-info strong {
+  padding: 10px;
+  font-size: 25px;
+  display: flex;
+  justify-content: center; /* Выравнивание по горизонтали */
+  align-items: center;
+  top: 50%;
+  left: 50%;
+  color: #feb339;
+}
+
+.center-wrapper {
+  display: flex;
+  justify-content: center; /* Выравнивание по горизонтали */
+  align-items: center; /* Выравнивание по вертикали */
+  height: 60vh; /* Высота блока равна высоте видимой части экрана */
+}
+
+form {
+  position: relative;; /* Для того чтобы кнопка находилась в строке с текстом */
+}
+
+button.out {
+  background-color: #fa9d24; /* Зеленый цвет фона */
+  color: white; /* Белый цвет текста */
+  padding: 10px 20px; /* Отступы внутри кнопки */
+  border: none; /* Убираем границу кнопки */
+  border-radius: 5px; /* Скругляем углы */
+  cursor: pointer; /* Изменяем курсор при наведении */
+  font-size: 16px; /* Размер текста */
+  left: 70%;
+}
+
+button.out:hover {
+  background-color: #feb339;
+}
+
+.info-item text{
+  text-align: center;
+  background-color: #f0f0f0;
+  padding: 10px 20px;
+  font-size: 25px;
+  border-radius: 10px; /* Скругляем углы */
+}

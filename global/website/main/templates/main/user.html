@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет</title>
+    <link rel="stylesheet" href="{% static 'main/css/user.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="profile-card">
+            <h1>Личный кабинет</h1>
+            <div class="profile-info">
+                <div class="info-item">
+                    <strong>Логин: </strong>
+                    <input type="text" class="rounded-input" value="{{ username }}" readonly>
+                </div>
+                <div class="info-item">
+                    <strong>Почта: </strong> 
+                    <input type="email" class="rounded-input" value="{{ email }}" readonly>
+                </div>
+            </div>
+            
+
+            <div class="center-wrapper">
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="out">Выйти</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

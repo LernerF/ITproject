@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главное меню</title>
+    <link rel="stylesheet" href="{% static 'main/css/main.css' %}">
+</head>
+<body>
+    
+    <header>
+        <a href="" class="logo">Galactic Pizza</a>
+        <nav>
+            <ul>
+                <li><a href="#contact">Контакты</a></li>
+                <li><a href="#">Отзывы</a></li>
+                <li><a href="about/">О нас</a></li>
+                <li><a href="#">Меню &Assign;</a>
+                    <ul>
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'user_profile' %}">Личный кабинет</a>
+                        {% else %}
+                            <a href="{% url 'login' %}">Вход</a>
+                            <a href="{% url 'register' %}">Регистрация</a>
+                        {% endif %}
+                        <li><a href="#">Промокоды</a></li>
+
+                        <li><a href="#">История заказов</a></li>
+                        {% if user.is_authenticated %}
+                            <li><a href="logout/">Выйти</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+
+    </header>
+
+    <div class="center">
+        Добро пожаловать на наш сайт! Мы рады предложить вам широкий выбор вкуснейших пицц, которые мы доставим прямо к вам домой. Наслаждайтесь ароматными и сочными блюдами, приготовленными с любовью и качественными ингредиентами. Закажите пиццу у нас и наслаждайтесь великолепным вкусом прямо у себя дома!
+    </div>
+    <a href="pizza/" class="buy">Заказать</a>
+</body>
+</html>

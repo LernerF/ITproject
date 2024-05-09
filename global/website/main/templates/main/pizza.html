@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Меню</title>
+    <link rel="stylesheet" href="{% static 'main/css/pizza.css' %}">
+</head>
+<body>
+    <a href="/" class="pref">Galactic Pizza</a>
+    <h1>Пиццы</h1>
+    <ul>
+        {% for pizza in pizzas %}
+            <li>
+                <img src="{{ pizza.image.url }}" alt="{{ pizza.name }}">
+                <div>
+                    <h3>{{ pizza.name }}</h3>
+                    <p>{{ pizza.price }}₽</p>
+                    <form action="{% url 'add_to_cart' pizza.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">В корзину</button>
+                    </form>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'go_to_cart' %}" class="cart-btn">Корзина</a>
+</body>
+</html>

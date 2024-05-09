@@ -28,6 +28,7 @@ from django.conf import settings
 from django.utils.http import urlsafe_base64_decode
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import csrf_protect
 
 def index(request):
     return render(request, 'main/index.html')

@@ -21,13 +21,14 @@
                     <input type="email" class="rounded-input" value="{{ email }}" readonly>
                 </div>
             </div>
-            
 
             <div class="center-wrapper">
                 <form action="{% url 'logout' %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="out">Выйти</button>
                 </form>
+                <!-- Добавление ссылки для перехода на страницу настроек -->
+                <a href="lkkabinet.html" class="settings-button">Настройки</a>
             </div>
         </div>
     </div>

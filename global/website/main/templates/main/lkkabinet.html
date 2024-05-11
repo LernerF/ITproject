@@ -5,14 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="1404945.ico" type="image/x-icon">  
     <title>PizzaGalactica</title>
+    <style>
+        .button-container {
+            margin: 20px;
+        }
+        input[type="text"], button {
+            margin: 10px 0;
+        }
+    </style>
 </head>
 <body>
     <div class="button-container">
-        <button class="button">История заказов</button>
-        <button class="button">Изменить имя пользователя</button>
-        <button class="button">Изменить пароль</button>
-        <button class="button">Изменить почту</button>
-        <button class="button">Изменить логин</button>
+        <button class="button">Личный кабинет</button>
+        
+        <!-- Форма для изменения имени пользователя -->
+        <div>
+            <form>
+                <label for="username">Имя пользователя:</label>
+                <input type="text" id="username" name="username" value="Текущее имя">
+                <button type="submit">Сохранить изменения</button>
+            </form>
+        </div>
+        <div>
+            <form>
+                <label for="username">пароль:</label>
+                <input type="text" password ="password">
+                <button type="submit">Сохранить изменения</button>
+            </form>
+        </div>
+        <div>
+            <form>
+                <label for="username">почта :</label>
+                <input type="text" id="username" name="username" value="Текущее имя">
+                <button type="submit">Сохранить изменения</button>
+            </form>
+        </div>
+        <div>
+            <form>
+                <label for="username">Имя пользователя:</label>
+                <input type="text" id="username" name="username" value="Текущее имя">
+                <button type="submit">Сохранить изменения</button>
+            </form>
+        </div>
     </div>
 </body>
 </html>

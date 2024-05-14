@@ -12,6 +12,16 @@
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
+        {% if form.errors %}
+            <p style="color: red;">Пожалуйста, исправьте следующие ошибки:</p>
+            <ul>
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+            </ul>
+        {% endif %}
         <button type="submit">Зарегистрироваться</button>
     </form>
 </body>

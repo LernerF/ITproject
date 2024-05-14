@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Меню</title>
     <link rel="stylesheet" href="{% static 'main/css/pizza.css' %}">
+    <script src="{% static 'main/js/pizza.js' %}" defer></script>
 </head>
 <body>
     <a href="/" class="pref">Galactic Pizza</a>
@@ -17,14 +18,36 @@
                 <div>
                     <h3>{{ pizza.name }}</h3>
                     <p>{{ pizza.price }}₽</p>
-                    <form action="{% url 'add_to_cart' pizza.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit">В корзину</button>
-                    </form>
+                    <button class="edit-btn" data-id="{{ pizza.id }}" data-name="{{ pizza.name }}" data-price="{{ pizza.price }}" data-image="{{ pizza.image.url }}" data-description="Наша пицца {{ pizza.name }} — это великолепное сочетание лучших ингредиентов. Тонкое хрустящее тесто, сочные томаты, свежий базилик, и расплавленный сыр создают уникальный вкус, который подарит вам настоящее удовольствие. Идеально подходит для любой трапезы!">Редактирование</button>
                 </div>
             </li>
         {% endfor %}
     </ul>
     <a href="{% url 'go_to_cart' %}" class="cart-btn">Корзина</a>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div class="modal-body">
+                <img id="modal-image" src="" alt="Pizza Image">
+                <div class="modal-text">
+                    <h3 id="modal-name"></h3>
+                    <p id="modal-price"></p>
+                    <p id="modal-description">Описание пиццы</p>
+                    <form id="ingredients-form" action="" method="post">
+                        {% csrf_token %}
+                        <div class="ingredients">
+                            {% for ingredient in ingredients %}
+                                <label><input type="checkbox" name="ingredients" value="{{ ingredient.id }}" checked> {{ ingredient.name }}</label>
+                                <button class="remove-ingredient" type="button" data-id="{{ ingredient.id }}">&times;</button><br>
+                            {% endfor %}
+                        </div>
+                        <button type="submit">В корзину</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

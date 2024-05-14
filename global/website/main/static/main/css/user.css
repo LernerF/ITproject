@@ -83,3 +83,48 @@ button.out:hover {
   font-size: 25px;
   border-radius: 10px; /* Скругляем углы */
 }
+
+
+.center-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.settings-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px; /* маленький размер */
+  height: 40px;
+  background-color: orange;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  text-align: center;
+  margin-bottom: 20px; /* отступ от кнопки "Выйти" */
+  transition: background-color 0.3s;
+  margin-top: -50px;
+}
+
+.settings-button i {
+  font-size: 15px; /* размер иконки */
+}
+
+.settings-button:hover {
+  background-color: darkorange; /* эффект наведения */
+}
+
+.out {
+  background-color: #f44336; /* цвет кнопки "Выйти" */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.out:hover {
+  background-color: #d32f2f; /* эффект наведения для кнопки "Выйти" */
+}

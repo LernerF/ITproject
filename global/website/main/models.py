@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 from django.views import View
+from django.contrib.auth.models import User
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, email, password=None):
@@ -37,11 +38,19 @@ class CustomUser(AbstractBaseUser):
     USERNAME_FIELD = 'username'
     EMAIL_FIELD = 'email'
 
+class Ingredient(models.Model):
+    name = models.CharField(max_length=255, verbose_name='Ингредиент')
+    
+    def __str__(self):
+        return self.name
+
 
 class Pizza(models.Model):
-    name = models.CharField(max_length=100, verbose_name='Наименование')
+    name = models.CharField(max_length=100, verbose_name='Название')
+    image = models.ImageField(upload_to='pizza_images', verbose_name='Изображение')
     price = models.DecimalField(max_digits=6, decimal_places=2, verbose_name='Цена')
-    image = models.ImageField(upload_to='media/img', default='../media/img/peperoni.jpeg')
+    description = models.TextField(verbose_name='Описание', default='Описание пиццы')
+    ingredients = models.ManyToManyField(Ingredient, blank=True, verbose_name='Ингредиенты')
 
     def __str__(self):
         return self.name
@@ -50,7 +59,9 @@ class Pizza(models.Model):
         verbose_name = 'Пицца'
         verbose_name_plural = 'Пиццы'
 
+
 class Cart(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     pizzas = models.ManyToManyField(Pizza, through='CartItem', verbose_name='Пиццы в корзине')
 
     class Meta:
@@ -62,6 +73,7 @@ class CartItem(models.Model):
     pizza = models.ForeignKey(Pizza, on_delete=models.CASCADE, verbose_name='Пицца')
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, verbose_name='Корзина')
     quantity = models.PositiveIntegerField(default=1, verbose_name='Количество')
+    ingredients = models.ManyToManyField(Ingredient, blank=True, verbose_name='Ингредиенты')
 
     def get_total_price(self):
         return self.pizza.price * self.quantity

@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History</title>
+    <link rel="stylesheet" href="{% static 'main/css/order.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Order History</h1>
+        <div class="orders">
+            {% for order in orders %}
+            <div class="order">
+                <p><strong>Order ID:</strong> {{ order.id }}</p>
+                <p><strong>Date Ordered:</strong> {{ order.date_ordered }}</p>
+                <p><strong>Products:</strong> {{ order.products }}</p>
+                <p><strong>Delivery Address:</strong> {{ order.delivery_address }}</p>
+                <p><strong>Status:</strong> {{ order.status }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

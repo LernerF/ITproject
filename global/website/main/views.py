@@ -1,5 +1,5 @@
-from django.shortcuts import render, redirect
-from .forms import UserRegistrationForm
+from django.shortcuts import render, redirect, get_object_or_404
+from .forms import CustomUserCreationForm
 from django.contrib.auth import authenticate, login
 from django.views import View
 from django.contrib.auth import logout
@@ -18,7 +18,6 @@ from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth.models import User
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
@@ -29,6 +28,12 @@ from django.utils.http import urlsafe_base64_decode
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from .models import Cart, CartItem, Pizza, Ingredient
 
 def index(request):
     return render(request, 'main/index.html')
@@ -39,6 +44,9 @@ def main_menu(request):
 def about(request):
     return render(request, 'main/about.html')
 
+def orders(request):
+    return render(request, 'main/order.html')
+
 def test_login(request):
     return render(request, 'main/test_login.html')
 
@@ -48,6 +56,8 @@ def reset_password(request):
 def reset_password(request):
     return render(request, 'main/change_password.html')
 
+def settings(request):
+    return render(request, 'main/lkkabinet.html')
 
 def logout_view(request):
     logout(request)
@@ -56,14 +66,37 @@ def logout_view(request):
 
 def register(request):
     if request.method == 'POST':
-        form = UserRegistrationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save() 
-            login(request, user) 
-            return redirect('/') 
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password1']
+            email = form.cleaned_data['email']
+            # Создаем пользователя с хэшированным паролем
+            User.objects.create_user(username=username, email=email, password=password)
+            
+            # Перенаправляем на страницу входа
+            return redirect('login')
     else:
-        form = UserRegistrationForm()
+        form = CustomUserCreationForm()
     return render(request, 'main/registration.html', {'form': form})
+
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        next_url = request.POST.get('next', '/')
+        
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect(next_url)
+        else:
+            error_message = "Неправильное имя пользователя или пароль. Пожалуйста, попробуйте снова."
+            return render(request, 'main/login.html', {'error_message': error_message, 'next': next_url})
+
+    next_url = request.GET.get('next', '/')
+    return render(request, 'main/login.html', {'next': next_url})
 
 def send_email(request, email, url_email, username):
     subject = 'Восстановление пароля на GalacticPizza'
@@ -99,8 +132,6 @@ def create_token_and_reset_link(user, request):
 
     return reset_url
 
-from django.views.decorators.csrf import ensure_csrf_cookie
-
 @ensure_csrf_cookie
 def password_change(request, uidb64, token):
     if request.method == 'POST':
@@ -135,44 +166,6 @@ def password_change(request, uidb64, token):
     return render(request, 'main/password_change.html', context)
 
 
-def login_view(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        next_url = request.POST.get('next', '/')
-        
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            # Перенаправляем на главную страницу после успешного входа
-            return redirect(next_url)
-        else:
-            # Возвращаем ошибку, если аутентификация не удалась
-            return render(request, 'main/login.html', {'next': next_url, 'invalid_credentials': True})
-
-    # Если метод запроса не POST, отображаем страницу входа
-    next_url = request.GET.get('next', '/')
-    return render(request, 'main/login.html', {'next': next_url})
-
-def login_view(request):
-    if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        next_url = request.POST.get('next', '/')
-        
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            # Перенаправляем на главную страницу после успешного входа
-            return redirect(next_url)
-        else:
-            # Возвращаем ошибку, если аутентификация не удалась
-            return render(request, 'main/login.html', {'next': next_url, 'invalid_credentials': True})
-
-    # Если метод запроса не POST, отображаем страницу входа
-    next_url = request.GET.get('next', '/')
-    return render(request, 'main/login.html', {'next': next_url})
-
 class UserProfileView(View):
     def get(self, request):
         # Получаем имя пользователя (логин) и email текущего пользователя
@@ -184,48 +177,65 @@ class UserProfileView(View):
     
 def pizza_list(request):
     pizzas = Pizza.objects.all()
-    return render(request, 'main/pizza.html', {'pizzas': pizzas})
+    ingredients = Ingredient.objects.all()
+    return render(request, 'main/pizza.html', {'pizzas': pizzas, 'ingredients': ingredients})
 
-def add_to_cart(request, pizza_id):
-    pizza = Pizza.objects.get(pk=pizza_id)
-    cart, created = Cart.objects.get_or_create(pk=request.session.get('cart_id'))
-    cart_item, created = CartItem.objects.get_or_create(cart=cart, pizza=pizza)
-    if not created:
-        cart_item.quantity += 1
-        cart_item.save()
-    request.session['cart_id'] = cart.pk
-    return redirect('pizza_list')
+@login_required
+def add_to_cart_ajax(request, pizza_id):
+    if request.method == 'POST':
+        try:
+            pizza = get_object_or_404(Pizza, pk=pizza_id)
+            cart, created = Cart.objects.get_or_create(user=request.user)
+            ingredients = request.POST.getlist('ingredients')  # Получаем выбранные ингредиенты
+            cart_item, created = CartItem.objects.get_or_create(cart=cart, pizza=pizza)
+            if not created:
+                cart_item.quantity += 1
+                cart_item.save()
+            cart_item.ingredients.set(ingredients)  # Устанавливаем выбранные ингредиенты для элемента корзины
+            
+            # Добавляем описание пиццы к элементу корзины
+            cart_item.description = pizza.description
+            cart_item.save()
+            
+            request.session['cart_id'] = cart.pk
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    else:
+        return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
+    
 def remove_from_cart(request, pizza_id):
     pizza = Pizza.objects.get(pk=pizza_id)
     cart = Cart.objects.get(pk=request.session.get('cart_id'))
     cart_item = CartItem.objects.get(cart=cart, pizza=pizza)
 
-    action = request.POST.get('action')  # Получаем значение параметра "action"
-
+    action = request.POST.get('action')
     if action == 'add':
-        print("PABOTAET")
         cart_item.quantity += 1
         cart_item.save()
     elif action == 'subtract':
         cart_item.quantity -= 1
-        cart_item.save()  # Сохраняем объект cart_item после изменения количества
+        cart_item.save()
         if cart_item.quantity == 0:
             cart_item.delete()
     return redirect('cart')
 
+@login_required
 def cart(request):
     try:
-        cart = Cart.objects.get(pk=request.session.get('cart_id'))
+        user = request.user
+        if user.is_authenticated:
+            cart = user.cart
+        else:
+            cart = Cart.objects.get(pk=request.session.get('cart_id'))
         cart_items = cart.cartitem_set.all()
-        total_price = sum(item.pizza.price * item.quantity for item in cart_items)
+        total_price = sum(item.get_total_price() for item in cart_items)
     except Cart.DoesNotExist:
         cart_items = []
         total_price = 0
     return render(request, 'main/cart.html', {'cart_items': cart_items, 'total_price': total_price})
 
-
-# views.py
 
 def go_to_cart(request):
     cart_id = request.session.get('cart_id')
@@ -233,3 +243,4 @@ def go_to_cart(request):
         return redirect('cart')
     else:
         return redirect('pizza_list')
+    

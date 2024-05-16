@@ -19,11 +19,13 @@
                         <h3>{{ item.pizza.name }}</h3>
                         <p>Цена: {{ item.pizza.price }}₽</p>
                         <p>Количество: {{ item.quantity }}</p>
-                        <p>Ингредиенты:
-                            {% for ingredient in item.ingredients.all %}
-                                {{ ingredient.name }}{% if not forloop.last %}, {% endif %}
-                            {% endfor %}
-                        </p>
+                        {% if item.ingredients.all %}
+                            <p>Ингредиенты:
+                                {% for ingredient in item.ingredients.all %}
+                                    {{ ingredient.name }}{% if not forloop.last %}, {% endif %}
+                                {% endfor %}
+                            </p>
+                        {% endif %}
                     </div>
                     <div class="cart-item-price">{{ item.get_total_price }}₽</div>
                     <form action="{% url 'remove_from_cart' item.pizza.id %}" method="post">

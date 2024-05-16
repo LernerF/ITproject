@@ -186,23 +186,25 @@ def add_to_cart_ajax(request, pizza_id):
         try:
             pizza = get_object_or_404(Pizza, pk=pizza_id)
             cart, created = Cart.objects.get_or_create(user=request.user)
-            ingredients = request.POST.getlist('ingredients')  # Получаем выбранные ингредиенты
+            ingredients_ids = request.POST.getlist('ingredients')  # Получаем выбранные ингредиенты
+            ingredients = Ingredient.objects.filter(id__in=ingredients_ids)
+
             cart_item, created = CartItem.objects.get_or_create(cart=cart, pizza=pizza)
             if not created:
                 cart_item.quantity += 1
                 cart_item.save()
+            
             cart_item.ingredients.set(ingredients)  # Устанавливаем выбранные ингредиенты для элемента корзины
-            
-            # Добавляем описание пиццы к элементу корзины
-            cart_item.description = pizza.description
+            cart_item.description = pizza.description  # Добавляем описание пиццы к элементу корзины
             cart_item.save()
-            
+
             request.session['cart_id'] = cart.pk
             return JsonResponse({'success': True})
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)})
     else:
         return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
 
     
 def remove_from_cart(request, pizza_id):

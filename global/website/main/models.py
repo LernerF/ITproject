@@ -40,6 +40,7 @@ class CustomUser(AbstractBaseUser):
 
 class Ingredient(models.Model):
     name = models.CharField(max_length=255, verbose_name='Ингредиент')
+    is_default = models.BooleanField(default=False, verbose_name='По умолчанию')
     
     def __str__(self):
         return self.name

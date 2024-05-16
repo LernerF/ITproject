@@ -1,4 +1,3 @@
-// pizza.js
 document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('modal');
     const closeBtn = document.querySelector('.close-btn');
@@ -7,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalPrice = document.getElementById('modal-price');
     const modalDescription = document.getElementById('modal-description');
     const ingredientsForm = document.getElementById('ingredients-form');
+    const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value; // Получаем CSRF-токен
 
     document.querySelectorAll('.edit-btn').forEach(button => {
         button.addEventListener('click', () => {
@@ -42,14 +42,45 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Добавим обработку нажатия на кнопку удаления ингредиента
-    document.querySelectorAll('.remove-ingredient').forEach(removeBtn => {
-        removeBtn.addEventListener('click', () => {
-            const ingredientId = removeBtn.dataset.id;
-            const ingredientCheckbox = document.querySelector(`input[value="${ingredientId}"]`);
-            if (ingredientCheckbox) {
-                ingredientCheckbox.checked = false;
-            }
+    // Добавим обработчик кнопки "Добавить в корзину"
+    document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+        button.addEventListener('click', async (event) => {
+            event.preventDefault(); // Предотвращаем отправку формы по умолчанию
+            const pizzaId = button.getAttribute('data-id');
+            const pizzaImage = button.parentElement.parentElement.querySelector('.pizza-image');
+            const clonedImage = pizzaImage.cloneNode(true);
+    
+            // Получаем все ингредиенты
+            const ingredients = Array.from(document.querySelectorAll('.ingredients input[type="checkbox"]:checked')).map(input => input.value);
+    
+            const data = {
+                pizza_id: pizzaId,
+                ingredients: ingredients // Передаем выбранные ингредиенты
+            };
+    
+            clonedImage.classList.add('cart-animation');
+            document.body.appendChild(clonedImage);
+    
+            const cartButton = document.querySelector('.cart-btn');
+            const cartRect = cartButton.getBoundingClientRect();
+            const pizzaRect = pizzaImage.getBoundingClientRect();
+    
+            clonedImage.style.left = `${pizzaRect.left}px`;
+            clonedImage.style.top = `${pizzaRect.top}px`;
+            clonedImage.style.width = `${pizzaRect.width}px`;
+            clonedImage.style.height = `${pizzaRect.height}px`;
+    
+            setTimeout(() => {
+                clonedImage.style.transform = `translate(${cartRect.left - pizzaRect.left}px, ${cartRect.top - pizzaRect.top}px) scale(0.5)`;
+                clonedImage.style.opacity = '0';
+            }, 10);
+    
+            clonedImage.addEventListener('transitionend', () => {
+                clonedImage.remove();
+            });
+    
+            // Отправляем запрос на сервер для добавления в корзину
+            const success = await addToCart(pizzaId, csrfToken, data);
         });
     });
 
@@ -65,8 +96,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 method: 'POST',
                 body: formData,
                 headers: {
-                    'X-CSRFToken': '{{ csrf_token }}', // Добавляем CSRF-токен
-                }, 
+                    'X-CSRFToken': csrfToken, // Передаем CSRF-токен в заголовок
+                },
             });
 
             if (response.ok) {
@@ -88,4 +119,29 @@ document.addEventListener('DOMContentLoaded', () => {
             // Можно добавить здесь логику для отображения сообщения об ошибке
         }
     });
+
+    // Функция для отправки запроса добавления в корзину
+    async function addToCart(pizzaId, csrfToken, data) {
+        try {
+            const response = await fetch(`/add_to_cart/${pizzaId}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
+                },
+                body: JSON.stringify(data), // Отправляем данные об ингредиентах вместе с идентификатором пиццы
+            });
+
+            if (!response.ok) {
+                throw new Error(`Ошибка HTTP: ${response.status}`);
+            }
+
+            const responseData = await response.json();
+            if (!responseData.success) {
+                console.error('Ошибка при добавлении в корзину:', responseData.error);
+            }
+        } catch (error) {
+            console.error('Ошибка:', error);
+        }
+    }
 });

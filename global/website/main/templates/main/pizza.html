@@ -7,6 +7,7 @@
     <title>Меню</title>
     <link rel="stylesheet" href="{% static 'main/css/pizza.css' %}">
     <script src="{% static 'main/js/pizza.js' %}" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <a href="/" class="pref">Galactic Pizza</a>
@@ -14,16 +15,19 @@
     <ul>
         {% for pizza in pizzas %}
             <li>
-                <img src="{{ pizza.image.url }}" alt="{{ pizza.name }}">
+                <img src="{{ pizza.image.url }}" alt="{{ pizza.name }}" class="pizza-image">
                 <div>
                     <h3>{{ pizza.name }}</h3>
                     <p>{{ pizza.price }}₽</p>
                     <button class="edit-btn" data-id="{{ pizza.id }}" data-name="{{ pizza.name }}" data-price="{{ pizza.price }}" data-image="{{ pizza.image.url }}" data-description="Наша пицца {{ pizza.name }} — это великолепное сочетание лучших ингредиентов. Тонкое хрустящее тесто, сочные томаты, свежий базилик, и расплавленный сыр создают уникальный вкус, который подарит вам настоящее удовольствие. Идеально подходит для любой трапезы!">Редактирование</button>
+                    <button class="add-to-cart-btn" type="button" data-id="{{ pizza.id }}">
+                        <i class="fas fa-cart-plus"></i> Добавить в корзину
+                    </button>
                 </div>
             </li>
         {% endfor %}
     </ul>
-    <a href="{% url 'go_to_cart' %}" class="cart-btn">Корзина</a>
+    <a href="{% url 'go_to_cart' %}" class="cart-btn"><i class="fas fa-shopping-cart"></i> Корзина</a>
 
     <!-- Modal -->
     <div id="modal" class="modal">
@@ -43,6 +47,7 @@
                                 <button class="remove-ingredient" type="button" data-id="{{ ingredient.id }}">&times;</button><br>
                             {% endfor %}
                         </div>
+                        <input type="hidden" name="pizza_id" id="pizza-id">
                         <button type="submit">В корзину</button>
                     </form>
                 </div>

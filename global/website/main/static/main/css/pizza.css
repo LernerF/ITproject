@@ -1,3 +1,4 @@
+/* General styles */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -146,6 +147,9 @@ button:hover, .edit-btn:hover {
 
 .modal-text {
     flex: 1; /* Позволяет тексту занимать оставшееся пространство */
+    display: flex; /* Располагаем элементы в строку */
+    align-items: flex-start; /* Выравниваем по верхнему краю */
+    flex-direction: column; /* Отображаем элементы в столбец */
 }
 
 #modal-description {
@@ -154,18 +158,73 @@ button:hover, .edit-btn:hover {
 
 .ingredients {
     margin: 10px 0;
+    display: flex; /* Располагаем чекбоксы и текст в строку */
+    flex-wrap: wrap; /* Позволяем переносить элементы на следующую строку */
+    gap: 10px; /* Добавляем отступы между элементами */
 }
 
+/* Checkbox styles */
+.ingredients input[type="checkbox"] {
+    display: none; /* Скрываем оригинальный чекбокс */
+}
+
+/* Стилизуем контейнер для кастомного чекбокса */
 .ingredients label {
-    display: block;
-    margin-bottom: 5px;
+    cursor: pointer; /* Изменяем курсор при наведении на label */
+    user-select: none; /* Запрещаем выделение текста */
+    display: inline-block; /* Делаем label блочным элементом */
+    line-height: 1.5; /* Высота строки, чтобы чекбоксы выровнялись по вертикали */
 }
 
-/* Styles for animation */
+/* Стилизуем кастомный чекбокс */
+.ingredients input[type="checkbox"] + label:before {
+    content: '';
+    position: relative; /* Позиционируем label относительно его контейнера */
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #aaa;
+    border-radius: 4px;
+    background-color: #fff;
+}
+
+/* Стилизуем кастомный чекбокс в состоянии выбранного */
+.ingredients input[type="checkbox"]:checked + label:before {
+    background-color: #e65c00;
+}
+
 .cart-animation {
     position: absolute;
     z-index: 1000;
     transition: transform 1s ease, opacity 1s ease;
     width: 50px; /* Устанавливаем фиксированный размер для анимации */
     height: 50px;
+}
+
+/* Располагаем кнопки "Редактировать" и "Добавить в корзину" на одном уровне и выравниваем их по правому краю */
+.edit-btn, .add-to-cart-btn {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Убираем текст у кнопки "Добавить в корзину" */
+.add-to-cart-btn {
+    padding: 10px 0;
+    width: 40px; /* Ширина кнопки */
+    height: 40px; /* Высота кнопки */
+    background-color: #e65c00;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    position: relative;
+}
+
+.add-to-cart-btn i {
+    margin-right: 0;
+}
+
+/* Убираем текст у кнопки "Добавить в корзину" при наведении */
+.add-to-cart-btn:hover {
+    background-color: #cc5200;
 }

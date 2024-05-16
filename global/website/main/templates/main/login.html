@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход</title>
+    <link rel="stylesheet" href="{% static 'main/css/login.css' %}">
+</head>
+<body>
+    <a href="/" class="logo">Galactic Pizza</a>
+
+    <div class="container">
+        <form method="post" action="{% url 'login' %}" id="login-form">
+            {% csrf_token %}
+            <h1>Вход</h1>
+            <div class="input-box">
+                <input type="text" name="username" placeholder="Логин" required />
+            </div>
+
+            <div class="input-box">
+                <input type="password" name="password" placeholder="Пароль" required />
+            </div>
+
+            <div class="remember-forgot">
+                <label><input type="checkbox" name="remember" /> Запомнить меня?</label>
+                <a href="/reset_password">Забыли пароль?</a>
+            </div>
+
+            <input type="hidden" name="next" value="{{ next }}">
+            <button type="submit" class="btn">Вход</button>
+
+            <div class="register-link">
+                <p>У вас нет аккаунта? <a href="/register">Зарегистрируйтесь!</a></p>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

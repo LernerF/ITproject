@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Заказ завершен</title>
+    <link rel="stylesheet" href="{% static 'main/css/order_complete.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Ваш заказ успешно завершен!</h1>
+        <h2>Детали заказа:</h2>
+        <ul>
+            {% for item in order_items %}
+                <li>
+                    <img src="{{ item.pizza.image.url }}" alt="{{ item.pizza.name }}">
+                    <div>
+                        <h3>{{ item.pizza.name }}</h3>
+                        <p>Количество: {{ item.quantity }} шт.</p>
+                        <p>Цена за штуку: {{ item.pizza.price }}₽</p>
+                        <p>Итоговая цена: {{ item.get_total_price }}₽</p>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <p class="total-cost">Общая сумма заказа: {{ total_cost }}₽</p>
+        <p>Спасибо за ваш заказ!</p>
+        <a href="{% url 'pizza_list' %}" class="back-to-menu">Вернуться к меню</a>
+    </div>
+</body>
+</html>

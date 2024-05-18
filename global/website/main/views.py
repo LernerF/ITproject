@@ -34,6 +34,8 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from .models import Cart, CartItem, Pizza, Ingredient
+from django.contrib.auth.decorators import login_required
+from .models import Order, OrderItem, Pizza, Cart, CartItem
 
 def index(request):
     return render(request, 'main/index.html')
@@ -99,6 +101,7 @@ def login_view(request):
     return render(request, 'main/login.html', {'next': next_url})
 
 def send_email(request, email, url_email, username):
+    from django.conf import settings
     subject = 'Восстановление пароля на GalacticPizza'
     message = f"""
     Приветствуем, {username}!
@@ -107,15 +110,16 @@ def send_email(request, email, url_email, username):
     {url_email}
     Ваше имя пользователя: {username}
     """
-    email_from = settings.EMAIL_HOST_USER
+    from_email = settings.EMAIL_HOST_USER
     recipient_list = [email,]
-    send_mail( subject, message, email_from, recipient_list )
+    send_mail(subject, message, from_email, recipient_list )
 
 def reset_password(request):
     if request.method == 'POST':
         email = request.POST.get('email')  # Используем почту вместо имени пользователя 
         user = User.objects.get(email=email)
         username = user.username
+        print(user)
         if user is not None:
             url_email = create_token_and_reset_link(user, request)
             send_email(request, email, url_email, username)
@@ -129,6 +133,7 @@ def create_token_and_reset_link(user, request):
     # Генерируем URL для сброса пароля
     uid = urlsafe_base64_encode(force_bytes(user.pk))
     reset_url = f'{request.build_absolute_uri("/")}password_change/{uid}/{token}'
+    print(reset_url)
 
     return reset_url
 
@@ -245,4 +250,70 @@ def go_to_cart(request):
         return redirect('cart')
     else:
         return redirect('pizza_list')
+    
+@login_required
+def complete_order(request):
+    try:
+        cart = Cart.objects.get(pk=request.session.get('cart_id'))
+        cart_items = cart.cartitem_set.all()
+        
+        if request.method == 'POST':
+            # Создаем новый заказ
+            order = Order(user=request.user)
+            order.save()
+
+            # Перемещаем все элементы из корзины в заказ
+            for item in cart_items:
+                order_item = OrderItem(
+                    order=order,
+                    pizza=item.pizza,
+                    quantity=item.quantity,
+                    price=item.pizza.price * item.quantity
+                )
+                order_item.save()
+            
+            # Очищаем корзину
+            cart.cartitem_set.all().delete()
+            del request.session['cart_id']  # Удаляем корзину из сессии
+
+            total_cost = order.get_total_cost()
+            
+            return render(request, 'main/order_complete.html', {'order': order, 'order_items': order.orderitem_set.all(), 'total_cost': total_cost})
+        
+    except Cart.DoesNotExist:
+        return redirect('pizza_list')
+    return redirect('cart')
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+
+@login_required
+def order_history(request):
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    
+    order_data = []
+    for order in orders:
+        items = order.orderitem_set.all()
+        item_list = []
+        for item in items:
+            item_list.append({
+                'pizza_name': item.pizza.name,
+                'description': item.pizza.description,
+                'image_url': item.pizza.image.url,  # Исправлено для получения URL изображения
+                'quantity': item.quantity,
+                'price': item.pizza.price,
+                'total_price': item.quantity * item.pizza.price
+            })
+        order_data.append({
+            'id': order.id,
+            'created_at': order.created_at,
+            'items': item_list,
+            'total_cost': order.get_total_cost()
+        })
+    
+    context = {'orders': order_data}
+    return render(request, 'main/order_history.html', context)
+
+
+
     

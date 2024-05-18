@@ -25,6 +25,8 @@ urlpatterns = [
     path('password_change/<uidb64>/<token>/', views.password_change, name='password_change'),
     path('settings/', views.settings, name='settings'),
     path('order/', views.orders, name='order'),
+    path('complete_order/', views.complete_order, name='complete_order'),
+    path('order_history/', views.order_history, name='order_history'),
     #path('submit_order/', views.submit_order, name='submit_order'),
     #path('register-success/', views.registration_success, name='registration-success'),
 ]

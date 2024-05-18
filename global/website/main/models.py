@@ -2,6 +2,9 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 from django.views import View
 from django.contrib.auth.models import User
+from django.db import models
+from django.contrib.auth.models import User
+
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, email, password=None):
@@ -51,7 +54,7 @@ class Pizza(models.Model):
     image = models.ImageField(upload_to='pizza_images', verbose_name='Изображение')
     price = models.DecimalField(max_digits=6, decimal_places=2, verbose_name='Цена')
     description = models.TextField(verbose_name='Описание', default='Описание пиццы')
-    ingredients = models.ManyToManyField(Ingredient, blank=True, verbose_name='Ингредиенты')
+    ingredients = models.ManyToManyField('Ingredient', blank=True, verbose_name='Ингредиенты')
 
     def __str__(self):
         return self.name
@@ -59,6 +62,7 @@ class Pizza(models.Model):
     class Meta:
         verbose_name = 'Пицца'
         verbose_name_plural = 'Пиццы'
+
 
 
 class Cart(models.Model):
@@ -82,3 +86,27 @@ class CartItem(models.Model):
     class Meta:
         verbose_name = 'Элемент корзины'
         verbose_name_plural = 'Элементы корзины'
+
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Order {self.pk} by {self.user.username}'
+
+    def get_total_cost(self):
+        return sum(item.get_total_price for item in self.orderitem_set.all())
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    pizza = models.ForeignKey(Pizza, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f'{self.quantity} x {self.pizza.name}'
+
+    @property
+    def get_total_price(self):
+        return self.quantity * self.pizza.price
+

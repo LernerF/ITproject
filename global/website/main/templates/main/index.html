@@ -26,7 +26,7 @@
                         {% endif %}
                         <li><a href="#">Промокоды</a></li>
 
-                        <li><a href="#">История заказов</a></li>
+                        <li><a href="{% url 'order_history' %}">История заказов</a></li>
                         {% if user.is_authenticated %}
                             <li><a href="logout/">Выйти</a></li>
                         {% endif %}

@@ -30,7 +30,7 @@
             {% endfor %}
         </ul>
         <p>Общая сумма: {{ total_price }}₽</p>
-        <form action="{% url 'complete_order' %}" method="post">
+        <form action="{% url 'time_place' %}" method="post">
             {% csrf_token %}
             <button type="submit" class="order-btn">Оформить заказ</button>
         </form>

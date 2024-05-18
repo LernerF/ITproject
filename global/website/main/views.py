@@ -180,10 +180,29 @@ class UserProfileView(View):
         # Передаем полученные данные в шаблон
         return render(request, 'main/user.html', {'username': username, 'email': email})
     
+from django.contrib.auth.decorators import login_required
+from django.db.models import Count
+
+@login_required
 def pizza_list(request):
     pizzas = Pizza.objects.all()
     ingredients = Ingredient.objects.all()
-    return render(request, 'main/pizza.html', {'pizzas': pizzas, 'ingredients': ingredients})
+
+    # Получение любимых пицц пользователя
+    user = request.user
+    pizza_counts = (
+        OrderItem.objects.filter(order__user=user)
+        .values('pizza')
+        .annotate(pizza_count=Count('pizza'))
+        .order_by('-pizza_count')[:4]
+    )
+    favorite_pizzas = [Pizza.objects.get(pk=pizza['pizza']) for pizza in pizza_counts]
+
+    return render(request, 'main/pizza.html', {
+        'pizzas': pizzas,
+        'ingredients': ingredients,
+        'favorite_pizzas': favorite_pizzas
+    })
 
 @login_required
 def add_to_cart_ajax(request, pizza_id):
@@ -250,7 +269,67 @@ def go_to_cart(request):
         return redirect('cart')
     else:
         return redirect('pizza_list')
+"""    
+@login_required
+def complete_order(request):
+    try:
+        cart = Cart.objects.get(pk=request.session.get('cart_id'))
+        cart_items = cart.cartitem_set.all()
+        
+        if request.method == 'POST':
+            # Создаем новый заказ
+            order = Order(user=request.user)
+            order.save()
+
+            # Перемещаем все элементы из корзины в заказ
+            for item in cart_items:
+                order_item = OrderItem(
+                    order=order,
+                    pizza=item.pizza,
+                    quantity=item.quantity,
+                    price=item.pizza.price * item.quantity
+                )
+                order_item.save()
+            
+            # Очищаем корзину
+            cart.cartitem_set.all().delete()
+            del request.session['cart_id']  # Удаляем корзину из сессии
+
+            total_cost = order.get_total_cost()
+            
+            return render(request, 'main/order_complete.html', {'order': order, 'order_items': order.orderitem_set.all(), 'total_cost': total_cost})
+        
+    except Cart.DoesNotExist:
+        return redirect('pizza_list')
+    return redirect('cart')
+"""
+@login_required
+def order_history(request):
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
     
+    order_data = []
+    for order in orders:
+        items = order.orderitem_set.all()
+        item_list = []
+        for item in items:
+            item_list.append({
+                'pizza_name': item.pizza.name,
+                'description': item.pizza.description,
+                'image_url': item.pizza.image.url,  # Исправлено для получения URL изображения
+                'quantity': item.quantity,
+                'price': item.pizza.price,
+                'total_price': item.quantity * item.pizza.price
+            })
+        order_data.append({
+            'id': order.id,
+            'created_at': order.created_at,
+            'items': item_list,
+            'total_cost': order.get_total_cost()
+        })
+    
+    context = {'orders': order_data}
+    return render(request, 'main/order_history.html', context)
+
 @login_required
 def complete_order(request):
     try:
@@ -284,36 +363,8 @@ def complete_order(request):
         return redirect('pizza_list')
     return redirect('cart')
 
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-
 @login_required
-def order_history(request):
-    orders = Order.objects.filter(user=request.user).order_by('-created_at')
-    
-    order_data = []
-    for order in orders:
-        items = order.orderitem_set.all()
-        item_list = []
-        for item in items:
-            item_list.append({
-                'pizza_name': item.pizza.name,
-                'description': item.pizza.description,
-                'image_url': item.pizza.image.url,  # Исправлено для получения URL изображения
-                'quantity': item.quantity,
-                'price': item.pizza.price,
-                'total_price': item.quantity * item.pizza.price
-            })
-        order_data.append({
-            'id': order.id,
-            'created_at': order.created_at,
-            'items': item_list,
-            'total_cost': order.get_total_cost()
-        })
-    
-    context = {'orders': order_data}
-    return render(request, 'main/order_history.html', context)
-
-
+def time_place(request):
+    return render(request, 'main/time_place.html')
 
     

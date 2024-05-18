@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отправка данных</title>
+</head>
+<body>
+    <h1>Отправка данных</h1>
+    <form action="{% url 'complete_order' %}" method="post">
+        {% csrf_token %}
+        <!-- Здесь могут быть другие поля формы, такие как input, textarea, etc. -->
+        <button type="submit">Отправить данные</button>
+    </form>
+</body>
+</html>

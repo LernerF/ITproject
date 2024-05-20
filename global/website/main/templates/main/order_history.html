@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>История заказов</title>
     <link rel="stylesheet" href="{% static 'main/css/order_history.css' %}">
-</head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'main/js/status.js' %}"></script>
+</head>  
 <body>
     <div class="container">
         <header>
@@ -16,8 +18,8 @@
             {% for order in orders %}
                 <div class="order-card">
                     <div class="order-header">
-                        <span class="order-id">Заказ #{{ order.id }}</span>
-                        <span class="order-status">Завершен</span>
+                        <span class="order-id" data-order-id="{{ order.id }}">Заказ #{{ order.id }}</span>
+                        <span id="order-status-{{ order.id }}" class="order-status">{{ order.status }}</span>
                     </div>
                     <div class="order-date">
                         {{ order.created_at|date:"d.m.Y H:i" }}
@@ -48,4 +50,5 @@
     </div>
 </body>
 </html>
+
 

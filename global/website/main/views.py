@@ -367,4 +367,12 @@ def complete_order(request):
 def time_place(request):
     return render(request, 'main/time_place.html')
 
-    
+
+def get_order_status(request, order_id):
+    # Получаем заказ по его ID
+    order = Order.objects.get(pk=order_id)
+    # Формируем ответ в формате JSON с актуальным статусом заказа
+    data = {
+        'status': order.status,
+    }
+    return JsonResponse(data)

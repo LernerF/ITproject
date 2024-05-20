@@ -88,8 +88,15 @@ class CartItem(models.Model):
         verbose_name_plural = 'Элементы корзины'
 
 class Order(models.Model):
+    STATUS_CHOICES = [
+        ('Готовится', 'Готовится'),
+        ('В пути', 'В пути'),
+        ('Завершен', 'Завершен'),
+    ]
+    
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Готовится')
 
     def __str__(self):
         return f'Order {self.pk} by {self.user.username}'

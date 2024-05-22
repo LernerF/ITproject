@@ -1,130 +1,137 @@
-body {
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
   font-family: Arial, sans-serif;
-  background-color: #f0f0f0;
+  list-style: none;
+  text-decoration: none;
+  color: white; /* Устанавливаем белый цвет для всех текстов по умолчанию */
+}
+
+body {
+  background: url('../img/background.png') no-repeat center center fixed; /* Установите URL вашего изображения */
+  background-size: cover;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 100vh; /* Высота блока равна высоте видимой части экрана */
 }
 
 .profile-card {
-  background-color: #ffffff;
-  height: 500px;
-  width: 400px;
+  background-color: rgba(0, 0, 0, 0.7); /* Матовый цвет контейнера */
   padding: 40px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Выравнивание по вертикали */
+  align-items: center; /* Выравнивание по горизонтали */
 }
 
 h1 {
-  display: block;
+  font-size: 32px;
+  margin-bottom: 20px; /* Отступ снизу */
+  color: #fff; /* Белый цвет текста */
+}
+
+.profile-info {
   width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  background-color: #feb339;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
+  margin-top: 20px; /* Добавление верхнего отступа */
 }
 
-.profile-info p {
+.info-item {
+  margin-bottom: 20px; /* Отступ снизу */
   display: flex;
-  justify-content: center; /* Выравнивание по горизонтали */
-  align-items: center;
-}
-
-.profile-info strong {
-  padding: 10px;
-  font-size: 25px;
-  display: flex;
-  justify-content: center; /* Выравнивание по горизонтали */
-  align-items: center;
-  top: 50%;
-  left: 50%;
-  color: #feb339;
-}
-
-.center-wrapper {
-  display: flex;
-  justify-content: center; /* Выравнивание по горизонтали */
+  justify-content: space-between; /* Выравнивание по горизонтали */
   align-items: center; /* Выравнивание по вертикали */
-  height: 60vh; /* Высота блока равна высоте видимой части экрана */
+  color: #fff; /* Белый цвет текста */
 }
 
-form {
-  position: relative;; /* Для того чтобы кнопка находилась в строке с текстом */
-}
-
-button.out {
-  background-color: #fa9d24; /* Зеленый цвет фона */
-  color: white; /* Белый цвет текста */
-  padding: 10px 20px; /* Отступы внутри кнопки */
-  border: none; /* Убираем границу кнопки */
-  border-radius: 5px; /* Скругляем углы */
-  cursor: pointer; /* Изменяем курсор при наведении */
-  font-size: 16px; /* Размер текста */
-  left: 70%;
-}
-
-button.out:hover {
-  background-color: #feb339;
-}
-
-.info-item text{
-  text-align: center;
-  background-color: #f0f0f0;
-  padding: 10px 20px;
+.info-item strong {
   font-size: 25px;
-  border-radius: 10px; /* Скругляем углы */
+  color: #feb339;
+  margin-right: 10px;
 }
 
+.rounded-input {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  width: calc(100% - 150px); /* Ширина с учетом отступа от strong */
+}
+
+.rounded-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
 
 .center-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 20px;
+}
+
+#button {
+  background-color: #fa9d24;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-bottom: 10px; /* Отступ снизу */
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+#button:hover {
+  background-color: #feb339;
+  transform: scale(1.05); /* Легкое увеличение при наведении */
 }
 
 .settings-button {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 40px; /* маленький размер */
+  width: 40px;
   height: 40px;
   background-color: orange;
   color: white;
   border: none;
   border-radius: 50%;
   text-align: center;
-  margin-bottom: 20px; /* отступ от кнопки "Выйти" */
-  transition: background-color 0.3s;
-  margin-top: -50px;
-}
-
-.settings-button i {
-  font-size: 15px; /* размер иконки */
+  margin-bottom: 20px;
+  transition: background-color 0.3s, transform 0.3s; /* Переход для плавного увеличения */
 }
 
 .settings-button:hover {
-  background-color: darkorange; /* эффект наведения */
+  transform: scale(1.1); /* Легкое увеличение при наведении */
 }
 
-.out {
-  background-color: #f44336; /* цвет кнопки "Выйти" */
+.settings-button i {
+  font-size: 15px;
+}
+
+button.out {
+  background-color: #fa9d24;
   color: white;
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  font-size: 16px;
+  transition: background-color 0.3s, transform 0.3s;
 }
 
-.out:hover {
-  background-color: #d32f2f; /* эффект наведения для кнопки "Выйти" */
+button.out:hover {
+  background-color: #feb339;
+  transform: scale(1.05); /* Легкое увеличение при наведении */
 }

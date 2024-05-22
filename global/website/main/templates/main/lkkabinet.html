@@ -1,50 +1,43 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PizzaGalactica</title>
     <link rel="stylesheet" href="{% static 'main/css/lk.labinet.css' %}">
-    <style>
-        .button-container {
-            margin: 20px;
-        }
-        input[type="text"], button {
-            margin: 10px 0;
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'main/css/new-styles.css' %}">
 </head>
 <body>
     <div class="button-container">
         <button class="button">Личный кабинет</button>
         
-        <!-- Форма для изменения имени пользователя -->
-        <div>
+        <div class="form-container">
+            <!-- Форма для изменения имени пользователя -->
             <form>
                 <label for="username">Имя пользователя:</label>
                 <input type="text" id="username" name="username" value="Текущее имя">
                 <button type="submit">Сохранить изменения</button>
             </form>
-        </div>
-        <div>
+
+            <!-- Форма для изменения пароля пользователя -->
             <form>
-                <label for="username">пароль:</label>
-                <input type="text" password ="password">
+                <label for="password">Пароль:</label>
+                <input type="password" id="password" name="password" value="Текущий пароль">
                 <button type="submit">Сохранить изменения</button>
             </form>
-        </div>
-        <div>
+
+            <!-- Форма для изменения почты пользователя -->
             <form>
-                <label for="username">почта :</label>
-                <input type="text" id="username" name="username" value="Текущее имя">
+                <label for="email">Почта:</label>
+                <input type="text" id="email" name="email" value="Текущая почта">
                 <button type="submit">Сохранить изменения</button>
             </form>
-        </div>
-        <div>
+
+            <!-- Дополнительная форма для изменения имени пользователя -->
             <form>
-                <label for="username">Имя пользователя:</label>
-                <input type="text" id="username" name="username" value="Текущее имя">
+                <label for="additional-username">Доп. имя пользователя:</label>
+                <input type="text" id="additional-username" name="additional-username" value="Дополнительное имя">
                 <button type="submit">Сохранить изменения</button>
             </form>
         </div>

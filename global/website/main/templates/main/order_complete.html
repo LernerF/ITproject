@@ -23,11 +23,6 @@
             {% endfor %}
         </ul>
         <p class="total-cost">Общая сумма заказа: {{ total_cost }}₽</p>
-        {% if delivery_time %}
-            <p>Время доставки: {{ delivery_time|date:"d.m.Y H:i" }}</p> <!-- Отображение времени доставки -->
-        {% else %}
-            <p>Время доставки не указано</p>
-        {% endif %}
         <p>Спасибо за ваш заказ!</p>
         <a href="{% url 'pizza_list' %}" class="back-to-menu">Вернуться к меню</a>
     </div>

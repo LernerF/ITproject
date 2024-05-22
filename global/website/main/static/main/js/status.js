@@ -1,3 +1,15 @@
+function sendNotification(orderId, newStatus) {
+    setTimeout(() => {
+        if (document.visibilityState === 'hidden'){
+            if (Notification.permission === 'granted') {
+                new Notification(`Ваш заказ №${orderId} обновился`, {
+                    body: `Статус заказа изменен на: ${newStatus}`,
+                });
+            }
+        }
+    }, 3000)
+}
+
 function updateOrderStatus(orderId) {
     // Отправляем GET-запрос на сервер для получения статуса заказа
     $.ajax({
@@ -42,23 +54,22 @@ $(document).ready(function() {
         }
         // Проверяем, если статус "completed" или "on the way", то не обновляем его
         if (storedStatus !== 'Завершен' && storedStatus !== 'В пути') {
-            // Переключаем статус на "on the way" через 10 секунд
+            // Переключаем статус на "on the way" через 20 секунд
             setTimeout(function() {
                 $('#order-status-' + orderId).text('В пути');
                 // Сохраняем новый статус в Local Storage
                 localStorage.setItem('order-status-' + orderId, 'В пути');
+                // Отправляем уведомление
+                sendNotification(orderId, 'В пути');
             }, 10000); // 10 секунд
             // Переключаем статус на "completed" через 20 секунд
             setTimeout(function() {
                 $('#order-status-' + orderId).text('Завершен');
                 // Сохраняем новый статус в Local Storage
                 localStorage.setItem('order-status-' + orderId, 'Завершен');
+                // Отправляем уведомление
+                sendNotification(orderId, 'Завершен');
             }, 20000); // 20 секунд
         }
     });
 });
-
-
-
-
-

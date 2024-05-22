@@ -11,6 +11,11 @@ h1 {
     margin-top: 20px;
 }
 
+h2 {
+    text-align: center;
+    margin-top: 20px;
+}
+
 ul {
     list-style-type: none;
     padding: 0;
@@ -170,10 +175,13 @@ button:hover, .edit-btn:hover {
 
 /* Стилизуем контейнер для кастомного чекбокса */
 .ingredients label {
-    cursor: pointer; /* Изменяем курсор при наведении на label */
-    user-select: none; /* Запрещаем выделение текста */
-    display: inline-block; /* Делаем label блочным элементом */
-    line-height: 1.5; /* Высота строки, чтобы чекбоксы выровнялись по вертикали */
+    display: block;
+    margin-bottom: 5px;
+    text-decoration: none; /* Убираем стандартный эффект зачеркивания */
+}
+
+.ingredients input[type="checkbox"]:checked + label {
+    text-decoration: line-through; /* Применяем эффект зачеркивания к метке при выборе чекбокса */
 }
 
 /* Стилизуем кастомный чекбокс */
@@ -227,4 +235,49 @@ button:hover, .edit-btn:hover {
 /* Убираем текст у кнопки "Добавить в корзину" при наведении */
 .add-to-cart-btn:hover {
     background-color: #cc5200;
+}
+
+/* Favorite pizzas styles */
+.favorite-pizzas-section {
+    margin-top: 40px;
+    text-align: center;
+}
+
+.favorite-pizzas-list {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.favorite-pizza-item {
+    border: 2px solid #ff6600; /* Добавляем рамку для выделения любимых пицц */
+    box-shadow: 0 4px 8px rgba(255, 102, 0, 0.2); /* Тень оранжевого цвета */
+}
+
+.favorite-pizza-item h3 {
+    color: #ff6600; /* Оранжевый цвет для названия любимых пицц */
+}
+
+/* Separator styles */
+.separator {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 40px 0;
+    position: relative;
+}
+
+.separator::before, .separator::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background-color: #ccc;
+}
+
+.separator-text {
+    padding: 0 10px;
+    font-size: 24px;
+    color: #555;
+    background-color: #f9f9f9;
 }

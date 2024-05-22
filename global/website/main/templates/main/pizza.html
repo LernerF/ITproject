@@ -11,28 +11,35 @@
 </head>
 <body>
     <a href="/" class="pref">Galactic Pizza</a>
-    <h1>Пиццы</h1>
+    <h1>Меню</h1>
 
     <!-- Секция для любимых пицц -->
     {% if favorite_pizzas %}
-        <h2>Ваши любимые пиццы</h2>
-        <ul>
-            {% for pizza in favorite_pizzas %}
-                <li>
-                    <img src="{{ pizza.image.url }}" alt="{{ pizza.name }}" class="pizza-image">
-                    <div>
-                        <h3>{{ pizza.name }}</h3>
-                        <p>{{ pizza.price }}₽</p>
-                        <button class="edit-btn" data-id="{{ pizza.id }}" data-name="{{ pizza.name }}" data-price="{{ pizza.price }}" data-image="{{ pizza.image.url }}" data-description="{{ pizza.description }}">Редактирование</button>
-                        <button class="add-to-cart-btn" type="button" data-id="{{ pizza.id }}">
-                            <i class="fas fa-cart-plus"></i>
-                            <span class="cart-animation"></span>
-                        </button>
-                    </div>
-                </li>
-            {% endfor %}
-        </ul>
+        <div class="favorite-pizzas-section">
+            <h2>Ваши любимые пиццы</h2>
+            <ul class="favorite-pizzas-list">
+                {% for pizza in favorite_pizzas %}
+                    <li class="favorite-pizza-item">
+                        <img src="{{ pizza.image.url }}" alt="{{ pizza.name }}" class="pizza-image">
+                        <div>
+                            <h3>{{ pizza.name }}</h3>
+                            <p>{{ pizza.price }}₽</p>
+                            <button class="edit-btn" data-id="{{ pizza.id }}" data-name="{{ pizza.name }}" data-price="{{ pizza.price }}" data-image="{{ pizza.image.url }}" data-description="{{ pizza.description }}">Редактирование</button>
+                            <button class="add-to-cart-btn" type="button" data-id="{{ pizza.id }}">
+                                <i class="fas fa-cart-plus"></i>
+                                <span class="cart-animation"></span>
+                            </button>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
     {% endif %}
+
+    <!-- Разделитель -->
+    <div class="separator">
+        <h2>Основное меню</h2>
+    </div>
 
     <!-- Основной список пицц -->
     <ul>
@@ -68,7 +75,7 @@
                         {% csrf_token %}
                         <div class="ingredients">
                             {% for ingredient in ingredients %}
-                                <input type="checkbox" id="ingredient-{{ ingredient.id }}" name="ingredients" value="{{ ingredient.id }}" checked>
+                                <input type="checkbox" id="ingredient-{{ ingredient.id }}" name="ingredients" value="{{ ingredient.id }}">
                                 <label for="ingredient-{{ ingredient.id }}">{{ ingredient.name }}</label>
                             {% endfor %}
                         </div>

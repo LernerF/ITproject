@@ -10,17 +10,9 @@
 <body>
     <div class="container">
         <h1>Order History</h1>
-        <div class="orders">
-            {% for order in orders %}
-            <div class="order">
-                <p><strong>Order ID:</strong> {{ order.id }}</p>
-                <p><strong>Date Ordered:</strong> {{ order.date_ordered }}</p>
-                <p><strong>Products:</strong> {{ order.products }}</p>
-                <p><strong>Delivery Address:</strong> {{ order.delivery_address }}</p>
-                <p><strong>Status:</strong> {{ order.status }}</p>
-            </div>
-            {% endfor %}
-        </div>
+        <button id='button'>Уведомление</button>
+        
+        <script src="{% static 'main/js/notification.js' %}"></script>
     </div>
 </body>
 </html>

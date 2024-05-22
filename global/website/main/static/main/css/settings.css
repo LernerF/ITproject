@@ -3,10 +3,8 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-image: url('../img/background.png'); /* Замените 'your-image-url.jpg' на URL вашего изображения */
+    background: url('../img/background.png') no-repeat;
     background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
     margin: 0;
     font-family: Arial, sans-serif;
     color: white; /* Белый цвет для всех текстов */

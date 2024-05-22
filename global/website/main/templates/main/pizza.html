@@ -42,22 +42,24 @@
     </div>
 
     <!-- Основной список пицц -->
-    <ul>
-        {% for pizza in pizzas %}
-            <li>
-                <img src="{{ pizza.image.url }}" alt="{{ pizza.name }}" class="pizza-image">
-                <div>
-                    <h3>{{ pizza.name }}</h3>
-                    <p>{{ pizza.price }}₽</p>
-                    <button class="edit-btn" data-id="{{ pizza.id }}" data-name="{{ pizza.name }}" data-price="{{ pizza.price }}" data-image="{{ pizza.image.url }}" data-description="{{ pizza.description }}">Редактирование</button>
-                    <button class="add-to-cart-btn" type="button" data-id="{{ pizza.id }}">
-                        <i class="fas fa-cart-plus"></i>
-                        <span class="cart-animation"></span>
-                    </button>
-                </div>
-            </li>
-        {% endfor %}
-    </ul>
+    <div class="pizza-container">
+        <ul class="pizza-list">
+            {% for pizza in pizzas %}
+                <li class="pizza-item">
+                    <img src="{{ pizza.image.url }}" alt="{{ pizza.name }}" class="pizza-image">
+                    <div>
+                        <h3>{{ pizza.name }}</h3>
+                        <p>{{ pizza.price }}₽</p>
+                        <button class="edit-btn" data-id="{{ pizza.id }}" data-name="{{ pizza.name }}" data-price="{{ pizza.price }}" data-image="{{ pizza.image.url }}" data-description="{{ pizza.description }}">Редактирование</button>
+                        <button class="add-to-cart-btn" type="button" data-id="{{ pizza.id }}">
+                            <i class="fas fa-cart-plus"></i>
+                            <span class="cart-animation"></span>
+                        </button>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 
     <a href="{% url 'go_to_cart' %}" class="cart-btn"><i class="fas fa-shopping-cart"></i> Корзина</a>
 

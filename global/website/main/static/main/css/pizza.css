@@ -101,15 +101,16 @@ button:hover, .edit-btn:hover {
 .modal {
     display: none;
     position: fixed;
-    z-index: 1;
+    z-index: 1000; /* Убедитесь, что z-index больше, чем у других элементов на странице */
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0,0,0,0.4);
-    justify-content: center; /* Центрирование по горизонтали */
-    align-items: center; /* Центрирование по вертикали */
+    background-color: rgba(0, 0, 0, 0.8); /* Более темный фон */
+    justify-content: center;
+    align-items: center;
+    pointer-events: all; /* Разрешаем клики внутри модального окна */
 }
 
 .modal-content {
@@ -118,9 +119,10 @@ button:hover, .edit-btn:hover {
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
-    max-width: 600px; /* Ограничение максимальной ширины */
+    max-width: 600px;
     border-radius: 8px;
-    text-align: left; /* Выровняем текст по левому краю */
+    text-align: left;
+    pointer-events: auto; /* Обрабатываем клики внутри модального окна */
 }
 
 .close-btn {
@@ -144,17 +146,17 @@ button:hover, .edit-btn:hover {
 }
 
 .modal img {
-    width: 40%; /* Уменьшаем ширину изображения */
+    width: 40%;
     height: auto;
     border-radius: 8px;
-    margin-right: 20px; /* Отступ справа */
+    margin-right: 20px;
 }
 
 .modal-text {
-    flex: 1; /* Позволяет тексту занимать оставшееся пространство */
-    display: flex; /* Располагаем элементы в строку */
-    align-items: flex-start; /* Выравниваем по верхнему краю */
-    flex-direction: column; /* Отображаем элементы в столбец */
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
 }
 
 #modal-description {
@@ -163,31 +165,28 @@ button:hover, .edit-btn:hover {
 
 .ingredients {
     margin: 10px 0;
-    display: flex; /* Располагаем чекбоксы и текст в строку */
-    flex-wrap: wrap; /* Позволяем переносить элементы на следующую строку */
-    gap: 10px; /* Добавляем отступы между элементами */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
-/* Checkbox styles */
 .ingredients input[type="checkbox"] {
-    display: none; /* Скрываем оригинальный чекбокс */
+    display: none;
 }
 
-/* Стилизуем контейнер для кастомного чекбокса */
 .ingredients label {
     display: block;
     margin-bottom: 5px;
-    text-decoration: none; /* Убираем стандартный эффект зачеркивания */
+    text-decoration: none;
 }
 
 .ingredients input[type="checkbox"]:checked + label {
-    text-decoration: line-through; /* Применяем эффект зачеркивания к метке при выборе чекбокса */
+    text-decoration: line-through;
 }
 
-/* Стилизуем кастомный чекбокс */
 .ingredients input[type="checkbox"] + label:before {
     content: '';
-    position: relative; /* Позиционируем label относительно его контейнера */
+    position: relative;
     display: inline-block;
     width: 18px;
     height: 18px;
@@ -196,7 +195,6 @@ button:hover, .edit-btn:hover {
     background-color: #fff;
 }
 
-/* Стилизуем кастомный чекбокс в состоянии выбранного */
 .ingredients input[type="checkbox"]:checked + label:before {
     background-color: #e65c00;
 }
@@ -205,11 +203,10 @@ button:hover, .edit-btn:hover {
     position: absolute;
     z-index: 1000;
     transition: transform 1s ease, opacity 1s ease;
-    width: 50px; /* Устанавливаем фиксированный размер для анимации */
+    width: 50px;
     height: 50px;
 }
 
-/* Располагаем кнопки "Редактировать" и "Добавить в корзину" на одном уровне и выравниваем их по правому краю */
 .edit-btn, .add-to-cart-btn {
     display: inline-block;
     vertical-align: middle;

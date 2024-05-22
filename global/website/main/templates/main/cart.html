@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Корзина</title>
     <link rel="stylesheet" href="{% static 'main/css/cart.css' %}">
+    <script src="{% static 'main/js/cart.js' %}" defer></script>
 </head>
 <body>
     <a href="/pizza" class="back">Назад</a>
@@ -13,15 +14,15 @@
     {% if cart_items %}
         <ul>
             {% for item in cart_items %}
-                <li class="cart-item">
+                <li class="cart-item" data-pizza-id="{{ item.pizza.id }}">
                     <img src="{{ item.pizza.image.url }}" alt="{{ item.pizza.name }}">
                     <div class="cart-item-details">
                         <h3>{{ item.pizza.name }}</h3>
                         <p>Цена: {{ item.pizza.price }}₽</p>
-                        <p>Количество: {{ item.quantity }}</p>
+                        <p class="quantity">Количество: {{ item.quantity }}</p>
                     </div>
                     <div class="cart-item-price">{{ item.get_total_price }}₽</div>
-                    <form action="{% url 'remove_from_cart' item.pizza.id %}" method="post">
+                    <form action="{% url 'remove_from_cart' item.pizza.id %}" method="post" class="cart-form">
                         {% csrf_token %}
                         <button type="submit" name="action" value="subtract">-</button>
                         <button type="submit" name="action" value="add">+</button>
@@ -29,7 +30,7 @@
                 </li>
             {% endfor %}
         </ul>
-        <p>Общая сумма: {{ total_price }}₽</p>
+        <p class="total-price">Общая сумма: {{ total_price }}₽</p>
         <form action="{% url 'time_place' %}" method="post">
             {% csrf_token %}
             <button type="submit" class="order-btn">Оформить заказ</button>
@@ -37,5 +38,6 @@
     {% else %}
         <p>Корзина пуста</p>
     {% endif %}
+    <div id="snackbar"></div>
 </body>
 </html>

@@ -9,7 +9,7 @@
 }
 
 body {
-  background: url('../img/background.png') no-repeat center center fixed; /* Установите URL вашего изображения */
+  background: url('../img/background.png') no-repeat; /* Установите URL вашего изображения */
   background-size: cover;
   height: 100vh;
   display: flex;

@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Reset form and check all checkboxes
             ingredientsForm.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-                checkbox.checked = true;
+                checkbox.checked = false;
             });
 
             // Set form action URL dynamically
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     window.addEventListener('click', (event) => {
-        if (event.target == modal) {
+        if (event.target === modal) {
             modal.style.display = 'none';
         }
     });

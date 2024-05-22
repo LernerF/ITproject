@@ -230,22 +230,39 @@ def add_to_cart_ajax(request, pizza_id):
         return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
 
-    
+@login_required
 def remove_from_cart(request, pizza_id):
-    pizza = Pizza.objects.get(pk=pizza_id)
-    cart = Cart.objects.get(pk=request.session.get('cart_id'))
-    cart_item = CartItem.objects.get(cart=cart, pizza=pizza)
+    try:
+        pizza = get_object_or_404(Pizza, pk=pizza_id)
+        cart = get_object_or_404(Cart, user=request.user)
+        cart_item = get_object_or_404(CartItem, cart=cart, pizza=pizza)
 
-    action = request.POST.get('action')
-    if action == 'add':
-        cart_item.quantity += 1
-        cart_item.save()
-    elif action == 'subtract':
-        cart_item.quantity -= 1
-        cart_item.save()
-        if cart_item.quantity == 0:
-            cart_item.delete()
-    return redirect('cart')
+        action = request.POST.get('action')
+        if action == 'add':
+            cart_item.quantity += 1
+            cart_item.save()
+        elif action == 'subtract':
+            cart_item.quantity -= 1
+            cart_item.save()
+            if cart_item.quantity == 0:
+                cart_item.delete()
+
+        cart_items = CartItem.objects.filter(cart=cart)
+        total_price = sum(item.get_total_price() for item in cart_items)
+
+        response_data = {
+            'success': True,
+            'quantity': cart_item.quantity if cart_item.quantity > 0 else 0,
+            'item_total_price': cart_item.get_total_price() if cart_item.quantity > 0 else 0,
+            'total_price': total_price,
+        }
+    except Exception as e:
+        response_data = {
+            'success': False,
+            'error': str(e)
+        }
+
+    return JsonResponse(response_data)
 
 @login_required
 def cart(request):
@@ -366,6 +383,7 @@ def complete_order(request):
 @login_required
 def time_place(request):
     return render(request, 'main/time_place.html')
+
 
 
 def get_order_status(request, order_id):

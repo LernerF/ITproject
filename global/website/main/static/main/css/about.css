@@ -84,7 +84,6 @@ nav ul li:hover > ul {
     top: 30%; /* Поднял выше */
     transform: translate(-50%, -30%);
     padding: 20px;
-    background-color: rgba(0, 0, 0, 0.7); /* Матовый фон контейнера */
     border-radius: 10px;
 }
 
@@ -116,7 +115,7 @@ nav ul li:hover > ul {
 }
 
 .description-container {
-    background-color: rgba(0, 0, 0, 0.905); /* Матовый цвет контейнера */
+    background-color: #000; /* Матовый цвет контейнера */
     padding: 20px;
     border-radius: 10px;
     max-width: 600px;
@@ -124,5 +123,5 @@ nav ul li:hover > ul {
     bottom: 31%; /* Позиционирование ближе к низу */
     right: 5%; /* Позиционирование ближе к правому краю */
     text-align: left;
-    color: #fff; /* Белый цвет текста */
+    color: 000; /* Белый цвет текста */
 }

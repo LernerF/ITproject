@@ -59,7 +59,7 @@ def reset_password(request):
     return render(request, 'main/change_password.html')
 
 def settings(request):
-    return render(request, 'main/lkkabinet.html')
+    return render(request, 'main/settings.html')
 
 def logout_view(request):
     logout(request)

@@ -36,16 +36,14 @@ body {
 }
 
 h1 {
-  h1 {
-    font-size: 32px;
-    margin-bottom: 20px; /* Отступ снизу */
-    color: #fff; /* Белый цвет текста */
-}
+  font-size: 32px;
+  margin-bottom: 20px; /* Отступ снизу */
+  color: #fff; /* Белый цвет текста */
 }
 
 .profile-info {
   width: 100%;
-  margin-top: 20px;
+  margin-top: 20px; /* Добавление верхнего отступа */
 }
 
 .info-item {
@@ -58,7 +56,7 @@ h1 {
 
 .info-item strong {
   font-size: 25px;
-  color: #ff8800;
+  color: #feb339;
   margin-right: 10px;
 }
 
@@ -82,31 +80,48 @@ h1 {
   margin-top: 20px;
 }
 
+#button {
+  background-color: #fa9d24;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-bottom: 10px; /* Отступ снизу */
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+#button:hover {
+  background-color: #feb339;
+  transform: scale(1.05); /* Легкое увеличение при наведении */
+}
+
 .settings-button {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 40px;
   height: 40px;
-  background-color: #ff8800;
+  background-color: orange;
   color: white;
   border: none;
   border-radius: 50%;
   text-align: center;
   margin-bottom: 20px;
-  transition: background-color 0.3s, transform 0.3s;
-}
-
-.settings-button i {
-  font-size: 15px;
+  transition: background-color 0.3s, transform 0.3s; /* Переход для плавного увеличения */
 }
 
 .settings-button:hover {
   transform: scale(1.1); /* Легкое увеличение при наведении */
 }
 
+.settings-button i {
+  font-size: 15px;
+}
+
 button.out {
-  background-color: #ff8800;
+  background-color: #fa9d24;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -117,6 +132,6 @@ button.out {
 }
 
 button.out:hover {
-  background-color: #ff8800;
+  background-color: #feb339;
   transform: scale(1.05); /* Легкое увеличение при наведении */
 }

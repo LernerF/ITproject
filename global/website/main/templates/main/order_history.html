@@ -18,7 +18,7 @@
             {% for order in orders %}
                 <div class="order-card">
                     <div class="order-header">
-                        <span class="order-id" data-order-id="{{ order.id }}">Заказ #{{ order.id }}</span>
+                        <span class="order-id" data-order-id="{{ order.id }}">Заказ #{{ order.id }} будет в {{ order.delivery_time|date:"H:i" }}</span>
                         <span id="order-status-{{ order.id }}" class="order-status">{{ order.status }}</span>
                     </div>
                     <div class="order-date">

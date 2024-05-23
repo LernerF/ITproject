@@ -10,7 +10,8 @@
     <h1>Отправка данных</h1>
     <form action="{% url 'complete_order' %}" method="post">
         {% csrf_token %}
-        <!-- Здесь могут быть другие поля формы, такие как input, textarea, etc. -->
+        <label for="delivery_time">Время доставки:</label>
+        <input type="time" id="delivery_time" name="delivery_time" required>
         <button type="submit">Отправить данные</button>
     </form>
 </body>

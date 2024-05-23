@@ -36,6 +36,9 @@ from django.contrib.auth.decorators import login_required
 from .models import Cart, CartItem, Pizza, Ingredient
 from django.contrib.auth.decorators import login_required
 from .models import Order, OrderItem, Pizza, Cart, CartItem
+from django.utils import timezone
+from datetime import timedelta
+from datetime import datetime, timedelta
 
 def index(request):
     return render(request, 'main/index.html')
@@ -340,6 +343,7 @@ def order_history(request):
         order_data.append({
             'id': order.id,
             'created_at': order.created_at,
+            'delivery_time': order.delivery_time,
             'items': item_list,
             'total_cost': order.get_total_cost()
         })
@@ -354,8 +358,20 @@ def complete_order(request):
         cart_items = cart.cartitem_set.all()
         
         if request.method == 'POST':
+            # Получаем введенное пользователем время доставки
+            delivery_time_str = request.POST.get('delivery_time')
+            if delivery_time_str:
+                # Преобразуем строку времени в объект time
+                delivery_time = datetime.strptime(delivery_time_str, '%H:%M').time()
+                now = timezone.now()
+
+                # Проверяем, что время доставки не раньше текущего времени
+                if delivery_time < now.time():
+                    return render(request, 'main/order_error.html', {'error': 'Вы не можете выбрать время доставки раньше текущего времени.'})
+
             # Создаем новый заказ
             order = Order(user=request.user)
+            order.delivery_time = datetime.combine(now.date(), delivery_time)
             order.save()
 
             # Перемещаем все элементы из корзины в заказ
@@ -374,7 +390,12 @@ def complete_order(request):
 
             total_cost = order.get_total_cost()
             
-            return render(request, 'main/order_complete.html', {'order': order, 'order_items': order.orderitem_set.all(), 'total_cost': total_cost})
+            return render(request, 'main/order_complete.html', {
+                'order': order,
+                'order_items': order.orderitem_set.all(),
+                'total_cost': total_cost,
+                'delivery_time': order.delivery_time  # Передаем время доставки в контекст
+            })
         
     except Cart.DoesNotExist:
         return redirect('pizza_list')

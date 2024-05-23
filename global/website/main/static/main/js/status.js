@@ -1,6 +1,6 @@
 function sendNotification(orderId, newStatus) {
     setTimeout(() => {
-        if (document.visibilityState === 'hidden'){
+        if (document.visibilityState === 'hidden') {
             if (Notification.permission === 'granted') {
                 new Notification(`Ваш заказ №${orderId} обновился`, {
                     body: `Статус заказа изменен на: ${newStatus}`,

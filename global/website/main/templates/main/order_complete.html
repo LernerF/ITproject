@@ -22,7 +22,8 @@
                 </li>
             {% endfor %}
         </ul>
-        <p class="total-cost">Общая сумма заказа: {{ total_cost }}₽</p>
+        <p class="total-cost">Общая сумма заказа: {{ total_cost }}₽</p> 
+        <p>Ваша заказ будет в {{ delivery_time|date:"H:i" }}</p>
         <p>Спасибо за ваш заказ!</p>
         <a href="{% url 'pizza_list' %}" class="back-to-menu">Вернуться к меню</a>
     </div>

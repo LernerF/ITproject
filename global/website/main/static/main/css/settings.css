@@ -3,11 +3,36 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: url('../img/background.png') no-repeat;
+    background-image: url('../img/background.png'); /* Замените 'your-image-url.jpg' на URL вашего изображения */
     background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     margin: 0;
     font-family: Arial, sans-serif;
     color: white; /* Белый цвет для всех текстов */
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2% 7%;
+}
+
+header .logo {
+    font-size: 20px;
+    font-weight: 900;
+    color: #fff;
+    transition: .5s;
+    text-decoration: none; /* Убирает подчеркивание ссылки */
+}
+
+header .logo:hover {
+    transform: scale(1.2);
 }
 
 .button-container {
@@ -18,9 +43,13 @@ body {
     background-color: rgba(0, 0, 0, 0.7); /* Матовый цвет контейнера */
     padding: 20px;
     border-radius: 10px;
+    margin-top: 60px; /* Добавлено для учета фиксированного header */
 }
 
 .button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 250px;
     height: 60px;
     background-color: #ff8800;
@@ -31,6 +60,7 @@ body {
     font-weight: bold;
     cursor: pointer;
     transition: transform 0.3s ease; /* Плавное увеличение */
+    text-decoration: none; /* Убирает подчеркивание ссылки */
 }
 
 .button:hover {

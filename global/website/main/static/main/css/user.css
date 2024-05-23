@@ -9,12 +9,36 @@
 }
 
 body {
-  background: url('../img/background.png') no-repeat; /* Установите URL вашего изображения */
+  background: url('../img/background.png') no-repeat center center fixed; /* Установите URL вашего изображения */
   background-size: cover;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column; /* Добавлено для вертикального выравнивания */
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2% 7%;
+}
+
+header .logo {
+    font-size: 20px;
+    font-weight: 900;
+    color: #fff;
+    transition: .5s;
+    text-decoration: none; /* Убирает подчеркивание ссылки */
+}
+
+header .logo:hover {
+    transform: scale(1.2);
 }
 
 .container {
@@ -22,6 +46,7 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh; /* Высота блока равна высоте видимой части экрана */
+  margin-top: 60px; /* Добавлено для учета фиксированного header */
 }
 
 .profile-card {
@@ -44,13 +69,17 @@ h1 {
 .profile-info {
   width: 100%;
   margin-top: 20px; /* Добавление верхнего отступа */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Центрирование элементов по горизонтали */
 }
 
 .info-item {
   margin-bottom: 20px; /* Отступ снизу */
   display: flex;
-  justify-content: space-between; /* Выравнивание по горизонтали */
-  align-items: center; /* Выравнивание по вертикали */
+  justify-content: space-between; /* Горизонтальное выравнивание */
+  align-items: center; /* Вертикальное выравнивание */
+  width: 100%;
   color: #fff; /* Белый цвет текста */
 }
 
@@ -80,6 +109,13 @@ h1 {
   margin-top: 20px;
 }
 
+.notification-button-container {
+  width: 100%; /* Обеспечение полной ширины для правильного центрирования */
+  display: flex;
+  justify-content: center; /* Центрирование кнопки по горизонтали */
+  margin-top: 20px; /* Добавление верхнего отступа */
+}
+
 #button {
   background-color: #fa9d24;
   color: white;
@@ -88,7 +124,6 @@ h1 {
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  margin-bottom: 10px; /* Отступ снизу */
   transition: background-color 0.3s, transform 0.3s;
 }
 
@@ -134,4 +169,10 @@ button.out {
 button.out:hover {
   background-color: #feb339;
   transform: scale(1.05); /* Легкое увеличение при наведении */
+}
+
+.logo {
+  font-size: 24px;
+  color: white;
+  margin-top: 20px; /* Отступ сверху */
 }

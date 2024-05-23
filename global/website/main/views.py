@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from .models import Pizza, Cart, CartItem
 import os
 import smtplib
+from django.db.models import Q
 from email.mime.text import MIMEText
 from email.header    import Header
 from email.mime.multipart import MIMEMultipart
@@ -39,6 +40,7 @@ from .models import Order, OrderItem, Pizza, Cart, CartItem
 from django.utils import timezone
 from datetime import timedelta
 from datetime import datetime, timedelta
+from django.core.exceptions import ValidationError
 
 def index(request):
     return render(request, 'main/index.html')
@@ -213,26 +215,32 @@ def add_to_cart_ajax(request, pizza_id):
         try:
             pizza = get_object_or_404(Pizza, pk=pizza_id)
             cart, created = Cart.objects.get_or_create(user=request.user)
-            ingredients_ids = request.POST.getlist('ingredients')  # Получаем выбранные ингредиенты
+            ingredients_ids = request.POST.getlist('ingredients')
             ingredients = Ingredient.objects.filter(id__in=ingredients_ids)
 
-            cart_item, created = CartItem.objects.get_or_create(cart=cart, pizza=pizza)
-            if not created:
-                cart_item.quantity += 1
-                cart_item.save()
-            
-            cart_item.ingredients.set(ingredients)  # Устанавливаем выбранные ингредиенты для элемента корзины
-            cart_item.description = pizza.description  # Добавляем описание пиццы к элементу корзины
+            # Проверка на наличие в корзине аналогичного элемента с теми же убранными ингредиентами
+            cart_items = CartItem.objects.filter(cart=cart, pizza=pizza)
+            for item in cart_items:
+                if set(item.ingredients.all()) == set(ingredients):
+                    item.quantity += 1
+                    item.save()
+                    return JsonResponse({'success': True})
+
+            # Если не найдено, добавляем новый элемент в корзину
+            cart_item = CartItem(cart=cart, pizza=pizza)
+            cart_item.save()
+            cart_item.ingredients.set(ingredients)
             cart_item.save()
 
             request.session['cart_id'] = cart.pk
             return JsonResponse({'success': True})
+        except ValidationError as e:
+            return JsonResponse({'success': False, 'error': str(e)})
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)})
     else:
         return JsonResponse({'success': False, 'error': 'Invalid request method'})
-
-
+    
 @login_required
 def remove_from_cart(request, pizza_id):
     try:
@@ -250,7 +258,7 @@ def remove_from_cart(request, pizza_id):
             if cart_item.quantity == 0:
                 cart_item.delete()
 
-        cart_items = CartItem.objects.filter(cart=cart)
+        cart_items = cart.cartitem_set.all()
         total_price = sum(item.get_total_price() for item in cart_items)
 
         response_data = {
@@ -277,10 +285,20 @@ def cart(request):
             cart = Cart.objects.get(pk=request.session.get('cart_id'))
         cart_items = cart.cartitem_set.all()
         total_price = sum(item.get_total_price() for item in cart_items)
+        
+        # Обновим описание элементов корзины, включая информацию об удаленных ингредиентах
+        for item in cart_items:
+            if item.ingredients.exists():
+                item.description = f"{item.pizza.description} (без {', '.join([ingredient.name for ingredient in item.ingredients.all()])})"
+            else:
+                item.description = item.pizza.description
+
+        return render(request, 'main/cart.html', {'cart_items': cart_items, 'total_price': total_price})
     except Cart.DoesNotExist:
         cart_items = []
         total_price = 0
     return render(request, 'main/cart.html', {'cart_items': cart_items, 'total_price': total_price})
+
 
 
 def go_to_cart(request):
@@ -323,6 +341,7 @@ def complete_order(request):
         return redirect('pizza_list')
     return redirect('cart')
 """
+
 @login_required
 def order_history(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
@@ -332,9 +351,11 @@ def order_history(request):
         items = order.orderitem_set.all()
         item_list = []
         for item in items:
+            removed_ingredients = item.ingredients.all()
+            removed_ingredients_names = [ingredient.name for ingredient in removed_ingredients]
             item_list.append({
                 'pizza_name': item.pizza.name,
-                'description': item.pizza.description,
+                'removed_ingredients': removed_ingredients_names,
                 'image_url': item.pizza.image.url,  # Исправлено для получения URL изображения
                 'quantity': item.quantity,
                 'price': item.pizza.price,
@@ -350,6 +371,8 @@ def order_history(request):
     
     context = {'orders': order_data}
     return render(request, 'main/order_history.html', context)
+
+
 
 @login_required
 def complete_order(request):
@@ -383,6 +406,8 @@ def complete_order(request):
                     price=item.pizza.price * item.quantity
                 )
                 order_item.save()
+                # Копируем информацию об убранных ингредиентах
+                order_item.ingredients.set(item.ingredients.all())
             
             # Очищаем корзину
             cart.cartitem_set.all().delete()

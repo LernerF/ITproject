@@ -120,8 +120,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Функция для отправки запроса добавления в корзину
-    async function addToCart(pizzaId, csrfToken, data) {
+     // Функция для отправки запроса добавления в корзину
+     async function addToCart(pizzaId, csrfToken, data) {
         try {
             const response = await fetch(`/add_to_cart/${pizzaId}/`, {
                 method: 'POST',

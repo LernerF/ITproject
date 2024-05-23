@@ -18,6 +18,9 @@
                         <p>Количество: {{ item.quantity }} шт.</p>
                         <p>Цена за штуку: {{ item.pizza.price }}₽</p>
                         <p>Итоговая цена: {{ item.get_total_price }}₽</p>
+                        {% if item.ingredients.exists %}
+                            <p class="removed-ingredients">Убранные ингредиенты: {{ item.ingredients.all|join:", " }}</p>
+                        {% endif %}
                     </div>
                 </li>
             {% endfor %}

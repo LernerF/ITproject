@@ -63,7 +63,7 @@
 
     <a href="{% url 'go_to_cart' %}" class="cart-btn"><i class="fas fa-shopping-cart"></i> Корзина</a>
 
-    <!-- Modal -->
+    <!-- Модальное окно для пиццы -->
     <div id="modal" class="modal">
         <div class="modal-content">
             <span class="close-btn">&times;</span>
@@ -72,7 +72,7 @@
                 <div class="modal-text">
                     <h3 id="modal-name"></h3>
                     <p id="modal-price"></p>
-                    <p id="modal-description">Описание пиццы</p>
+                    <p id="modal-description"></p> <!-- Обновлено -->
                     <form id="ingredients-form" action="" method="post">
                         {% csrf_token %}
                         <div class="ingredients">

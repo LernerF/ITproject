@@ -30,7 +30,9 @@
                                 <img src="{{ item.image_url }}" alt="{{ item.pizza_name }}">
                                 <div class="item-info">
                                     <div class="item-name">{{ item.pizza_name }}</div>
-                                    <div class="item-description">{{ item.description }}</div>
+                                    {% if item.removed_ingredients %}
+                                        <div class="removed-ingredients">Убранные ингредиенты: {{ item.removed_ingredients|join:", " }}</div>
+                                    {% endif %}
                                     <div class="item-quantity-price">{{ item.quantity }} x {{ item.price }}₽</div>
                                 </div>
                                 <div class="item-total-price">{{ item.total_price }}₽</div>
@@ -50,5 +52,3 @@
     </div>
 </body>
 </html>
-
-

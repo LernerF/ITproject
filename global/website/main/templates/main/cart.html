@@ -20,6 +20,9 @@
                         <h3>{{ item.pizza.name }}</h3>
                         <p>Цена: {{ item.pizza.price }}₽</p>
                         <p class="quantity">Количество: {{ item.quantity }}</p>
+                        {% if item.ingredients.exists %}
+                            <p class="removed-ingredients">Убранные ингредиенты: {{ item.ingredients.all|join:", " }}</p>
+                        {% endif %}
                     </div>
                     <div class="cart-item-price">{{ item.get_total_price }}₽</div>
                     <form action="{% url 'remove_from_cart' item.pizza.id %}" method="post" class="cart-form">

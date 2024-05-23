@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.core.exceptions import ValidationError
 
 
 class CustomUserManager(BaseUserManager):
@@ -75,14 +76,22 @@ class Cart(models.Model):
         verbose_name_plural = 'Корзины'
 
 
+
+
 class CartItem(models.Model):
     pizza = models.ForeignKey(Pizza, on_delete=models.CASCADE, verbose_name='Пицца')
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, verbose_name='Корзина')
     quantity = models.PositiveIntegerField(default=1, verbose_name='Количество')
-    ingredients = models.ManyToManyField(Ingredient, blank=True, verbose_name='Ингредиенты')
+    ingredients = models.ManyToManyField(Ingredient, blank=True, verbose_name='Удаленные ингредиенты')
 
     def get_total_price(self):
         return self.pizza.price * self.quantity
+
+    def __str__(self):
+        removed_ingredients = ', '.join([ingredient.name for ingredient in self.ingredients.all()])
+        if removed_ingredients:
+            return f'{self.pizza.name} (без {removed_ingredients})'
+        return self.pizza.name
 
     class Meta:
         verbose_name = 'Элемент корзины'
@@ -111,6 +120,7 @@ class OrderItem(models.Model):
     pizza = models.ForeignKey(Pizza, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    ingredients = models.ManyToManyField(Ingredient, blank=True)
 
     def __str__(self):
         return f'{self.quantity} x {self.pizza.name}'

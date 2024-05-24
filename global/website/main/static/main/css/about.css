@@ -87,41 +87,18 @@ nav ul li:hover > ul {
     border-radius: 10px;
 }
 
-.contact-list {
-    list-style-type: none;
-    padding: 10px;
-}
-
-.contact-list li {
-    margin-bottom: 10px;
-}
-
-.contact-list a {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    color: #fff;
-    padding: 10px;
-}
-
-.contact-list a img {
-    width: 30px; /* Подстройте размеры иконок по необходимости */
-    margin-right: 10px;
-}
-
-.contact-list a:hover {
-    font-weight: bold;
-    color: #ffffff; /* Цвет текста при наведении */
-}
-
 .description-container {
-    background-color: #000; /* Матовый цвет контейнера */
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 600px;
+    background-color: rgba(0, 0, 0, 0.8); /* Добавляем прозрачность для размытия */
+    padding: 30px; /* Увеличиваем внутренний отступ */
+    border-radius: 20px; /* Увеличиваем радиус скругления */
+    max-width: 800px; /* Увеличиваем максимальную ширину */
     position: absolute;
-    bottom: 31%; /* Позиционирование ближе к низу */
-    right: 5%; /* Позиционирование ближе к правому краю */
+    top: 50%; /* Положение в вертикальном направлении на 50% */
+    left: 50%; /* Положение в горизонтальном направлении на 50% */
+    transform: translate(-50%, -50%); /* Сдвигаем контейнер на 50% относительно себя по обоим осям */
     text-align: left;
-    color: 000; /* Белый цвет текста */
+    color: #fff; /* Белый цвет текста */
+    backdrop-filter: blur(10px); /* Эффект размытия */
+    font-size: 20px; /* Увеличиваем размер текста */
+    line-height: 1.5; /* Увеличиваем межстрочный интервал */
 }

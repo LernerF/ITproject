@@ -3,7 +3,7 @@
 /* Common styles */
 body {
     font-family: Arial, sans-serif;
-    background: url('../img/background.png') no-repeat center center fixed;
+    background: url('../img/background.png') no-repeat;
     background-size: cover;
     height: 100vh;
     display: flex;

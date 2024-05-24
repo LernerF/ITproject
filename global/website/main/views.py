@@ -51,6 +51,9 @@ def main_menu(request):
 def about(request):
     return render(request, 'main/about.html')
 
+def contact(request):
+    return render(request, 'main/contact.html')
+
 def orders(request):
     return render(request, 'main/order.html')
 
@@ -241,6 +244,7 @@ def add_to_cart_ajax(request, pizza_id):
     else:
         return JsonResponse({'success': False, 'error': 'Invalid request method'})
     
+
 @login_required
 def remove_from_cart(request, pizza_id):
     try:
@@ -286,18 +290,62 @@ def cart(request):
         cart_items = cart.cartitem_set.all()
         total_price = sum(item.get_total_price() for item in cart_items)
         
-        # Обновим описание элементов корзины, включая информацию об удаленных ингредиентах
+        # Обновим описание элементов корзины, включая информацию об удаленных ингредиентах и добавим ingredients_ids
         for item in cart_items:
             if item.ingredients.exists():
                 item.description = f"{item.pizza.description} (без {', '.join([ingredient.name for ingredient in item.ingredients.all()])})"
+                item.ingredients_ids = item.ingredients.values_list('id', flat=True)
             else:
                 item.description = item.pizza.description
+                item.ingredients_ids = []
 
         return render(request, 'main/cart.html', {'cart_items': cart_items, 'total_price': total_price})
     except Cart.DoesNotExist:
         cart_items = []
         total_price = 0
     return render(request, 'main/cart.html', {'cart_items': cart_items, 'total_price': total_price})
+
+
+def update_cart(request, pizza_id):
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        cart_id = request.session.get('cart_id')
+        if not cart_id:
+            return JsonResponse({'success': False, 'error': 'Корзина не найдена'})
+
+        cart = Cart.objects.get(id=cart_id)
+        
+        ingredients_to_remove = request.POST.getlist('ingredients')  # Список ID ингредиентов для удаления
+
+        # Находим CartItem с учётом убранных ингредиентов
+        cart_items = CartItem.objects.filter(cart=cart, pizza_id=pizza_id)
+        for item in cart_items:
+            if set(item.ingredients.values_list('id', flat=True)) == set(map(int, ingredients_to_remove)):
+                cart_item = item
+                break
+        else:
+            return JsonResponse({'success': False, 'error': 'Элемент корзины не найден'})
+
+        if action == 'add':
+            cart_item.quantity += 1
+        elif action == 'subtract':
+            cart_item.quantity -= 1
+
+        if cart_item.quantity <= 0:
+            cart_item.delete()
+        else:
+            cart_item.save()
+
+        total_price = sum(item.get_total_price() for item in cart.cartitem_set.all())
+
+        return JsonResponse({
+            'success': True,
+            'quantity': cart_item.quantity,
+            'item_total_price': cart_item.get_total_price(),
+            'total_price': total_price
+        })
+
+    return JsonResponse({'success': False, 'error': 'Недопустимый запрос'})
 
 
 
@@ -428,6 +476,17 @@ def complete_order(request):
 
 @login_required
 def time_place(request):
+    if request.method == 'POST':
+        delivery_time_str = request.POST.get('delivery_time')
+        if delivery_time_str:
+            now = timezone.localtime(timezone.now())
+            delivery_time = now.replace(hour=int(delivery_time_str[:2]), minute=int(delivery_time_str[3:5]), second=0, microsecond=0)
+            
+            if delivery_time < now:
+                return redirect('time_place')
+            else:
+                return redirect('complete_order')
+    
     return render(request, 'main/time_place.html')
 
 

@@ -5,6 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Отправка данных</title>
+    <link rel="stylesheet" href="{% static 'main/css/time_place.css' %}">
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const deliveryTimeInput = document.getElementById("delivery_time");
+            const now = new Date();
+            now.setMinutes(now.getMinutes() + 30);
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            deliveryTimeInput.min = `${hours}:${minutes}`;
+        });
+    </script>
 </head>
 <body>
     <h1>Отправка данных</h1>
@@ -12,7 +23,7 @@
         {% csrf_token %}
         <label for="delivery_time">Время доставки:</label>
         <input type="time" id="delivery_time" name="delivery_time" required>
-        <button type="submit">Отправить данные</button>
+        <button type="submit">Оформление заказа</button>
     </form>
 </body>
 </html>

@@ -29,6 +29,7 @@ urlpatterns = [
     path('order_history/', views.order_history, name='order_history'),
     path('time_place/', views.time_place, name='time_place'),
     path('order-history/get-order-status/<int:order_id>/', views.get_order_status, name='get_order_status'),
+    path('contact/', views.contact, name='contact'),
     #path('submit_order/', views.submit_order, name='submit_order'),
     #path('register-success/', views.registration_success, name='registration-success'),
 ]

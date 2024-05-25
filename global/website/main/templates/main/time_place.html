@@ -1,29 +1,389 @@
-{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Отправка данных</title>
-    <link rel="stylesheet" href="{% static 'main/css/time_place.css' %}">
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const deliveryTimeInput = document.getElementById("delivery_time");
-            const now = new Date();
-            now.setMinutes(now.getMinutes() + 30);
-            const hours = now.getHours().toString().padStart(2, '0');
-            const minutes = now.getMinutes().toString().padStart(2, '0');
-            deliveryTimeInput.min = `${hours}:${minutes}`;
-        });
-    </script>
+    <title>Добавление нового адреса</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            display: flex;
+            flex-direction: row;
+            width: 90%;
+            max-width: 1200px;
+            height: 90vh;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .form-container {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            width: 40%;
+            box-sizing: border-box;
+            height: 100%;
+            overflow-y: auto;
+        }
+        .form-container h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #ff8c00;
+        }
+        .form-container input,
+        .form-container button {
+            margin-top: 10px;
+            padding: 15px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+            box-sizing: border-box;
+            width: 100%;
+        }
+        .form-container button {
+            background-color: #ff8c00;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .form-container button:hover {
+            background-color: #e07a00;
+        }
+        .form-container .location-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .form-container .location-button svg {
+            margin-right: 10px;
+        }
+        #map {
+            width: 60%;
+            height: 100%;
+        }
+        .suggestions {
+            border: 1px solid #ccc;
+            max-height: 200px;
+            overflow-y: auto;
+            background: white;
+            position: absolute;
+            z-index: 1000;
+            width: calc(100% - 30px);
+            top: 75px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+        .suggestion-item {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .suggestion-item:hover {
+            background: #f0f0f0;
+        }
+        .form-section {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .form-section h3 {
+            margin-top: 0;
+            color: #ff8c00;
+        }
+        .form-section label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        .form-section input[type="radio"] {
+            margin-right: 10px;
+        }
+        .form-section .payment-option {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+        .form-section .payment-option img {
+            margin-left: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Отправка данных</h1>
-    <form action="{% url 'complete_order' %}" method="post">
-        {% csrf_token %}
-        <label for="delivery_time">Время доставки:</label>
-        <input type="time" id="delivery_time" name="delivery_time" required>
-        <button type="submit">Оформление заказа</button>
-    </form>
+    <div class="container">
+        <div class="form-container">
+            <h2>Ваш адрес</h2>
+            <form id="address-form" method="POST" action="{% url 'time_place' %}">
+                {% csrf_token %}
+                <div style="position: relative;">
+                    <input type="text" id="address" name="full_address" placeholder="Город, улица и дом" oninput="geocodeAddress()" autocomplete="off" />
+                    <div id="suggestions" class="suggestions"></div>
+                </div>
+                <button type="button" class="location-button" onclick="getLocation()">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 96 960 960" width="24"><path d="M479.825 856Q512 856 534 834.175q22-21.825 22-54.175Q556 748 534.175 726q-21.825-22-54.175-22Q448 704 426 725.825q-22 21.825-22 54.175Q404 812 425.825 834q21.825 22 54 22Zm.087-221Q502 635 512 625.063q10-9.938 10-25Q522 584 512.063 574q-9.938-10-25-10Q472 564 462 573.938q-10 9.937-10 25Q452 614 461.938 624q9.937 10 25.974 11ZM480 576Z"/><path d="M479.825 856Q512 856 534 834.175q22-21.825 22-54.175Q556 748 534.175 726q-21.825-22-54.175-22Q448 704 426 725.825q-22 21.825-22 54.175Q404 812 425.825 834q21.825 22 54 22Zm.087-221Q502 635 512 625.063q10-9.938 10-25Q522 584 512.063 574q-9.938-10-25-10Q472 564 462 573.938q-10 9.937-10 25Q452 614 461.938 624q9.937 10 25.974 11ZM480 576ZM456 480Z"/><path d="M472 576Z"/><path d="M480 576Z"/></svg>
+                    Определить местоположение
+                </button>
+                <input type="text" id="entrance" name="entrance" placeholder="Подъезд">
+                <input type="text" id="doorCode" name="door_code" placeholder="Код двери">
+                <input type="text" id="floor" name="floor" placeholder="Этаж">
+                <input type="text" id="apartment" name="apartment" placeholder="Квартира">
+                <input type="text" id="comments" name="comments" placeholder="Комментарий к адресу">
+
+                <div class="form-section">
+                    <h3>Время доставки</h3>
+                    <label>
+                        <input type="radio" name="delivery_time" value="asap" checked>
+                        Как можно быстрее
+                    </label>
+                    <label>
+                        <input type="radio" name="delivery_time" value="scheduled">
+                        Ко времени
+                    </label>
+                    <div id="scheduled-time" style="display: none;">
+                        <input type="time" id="delivery-time" name="scheduled_time" placeholder="Выберите время">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Способ оплаты</h3>
+                    <label class="payment-option">
+                        <input type="radio" name="payment_method" value="sbp" checked>
+                        СБП
+                        <img src="path/to/sbp-icon.png" alt="СБП">
+                    </label>
+                    <label class="payment-option">
+                        <input type="radio" name="payment_method" value="sberpay">
+                        SberPay
+                        <img src="path/to/sberpay-icon.png" alt="SberPay">
+                    </label>
+                    <label class="payment-option">
+                        <input type="radio" name="payment_method" value="card-online">
+                        Картой онлайн
+                        <img src="path/to/card-online-icon.png" alt="Картой онлайн">
+                    </label>
+                    <label class="payment-option">
+                        <input type="radio" name="payment_method" value="card-offline">
+                        Картой курьеру
+                        <img src="path/to/card-offline-icon.png" alt="Картой курьеру">
+                    </label>
+                    <label class="payment-option">
+                        <input type="radio" name="payment_method" value="cash">
+                        Наличными
+                        <img src="path/to/cash-icon.png" alt="Наличными">
+                    </label>
+                </div>
+
+                <button type="submit">Завершить</button>
+            </form>
+        </div>
+        <div id="map"></div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([55.751244, 37.618423], 13);  // Центр Москвы по умолчанию
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        var centerMarker = L.marker(map.getCenter(), {
+            draggable: true
+        }).addTo(map);
+
+        var searchTimeout;
+        var addressUpdated = false;
+        var isManualInput = false;
+
+        function updateAddress(attempts = 3) {
+            if (isManualInput) return;
+
+            var center = centerMarker.getLatLng();
+            var url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${center.lat}&lon=${center.lng}`;
+
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data && data.address) {
+                        var address = formatAddress(data.address);
+                        document.getElementById('address').value = address;
+                        addressUpdated = true;
+                    } else {
+                        document.getElementById('address').value = 'Адрес не найден';
+                    }
+                })
+                .catch(error => {
+                    console.error("Geocoding error: ", error);
+                    if (attempts > 0) {
+                        setTimeout(() => updateAddress(attempts - 1), 2000);
+                    } else {
+                        document.getElementById('address').value = 'Ошибка геокодирования';
+                    }
+                });
+        }
+
+        function formatAddress(address) {
+            let parts = [];
+            if (address.road) parts.push(address.road);
+            if (address.house_number) parts.push(address.house_number);
+            if (address.city) parts.push(address.city);
+            if (address.town) parts.push(address.town);
+            if (address.village) parts.push(address.village);
+            return parts.join(', ');
+        }
+
+        map.on('moveend', function() {
+            if (!addressUpdated) {
+                var center = map.getCenter();
+                centerMarker.setLatLng(center);
+                updateAddress();
+            }
+            addressUpdated = false;
+        });
+
+        centerMarker.on('dragend', function() {
+            addressUpdated = false;
+            updateAddress();
+        });
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var lat = position.coords.latitude;
+                    var lon = position.coords.longitude;
+                    map.setView([lat, lon], 13);
+                    centerMarker.setLatLng([lat, lon]);
+                    updateAddress();
+                }, function(error) {
+                    console.error("Geolocation error: ", error);
+                    alert("Не удалось определить местоположение.");
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        function addAddress() {
+            document.getElementById('address-form').submit();
+        }
+
+        function geocodeAddress() {
+            isManualInput = true;
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                var address = document.getElementById('address').value;
+                if (address.length > 3) {
+                    var url = `https://nominatim.openstreetmap.org/search?format=json&q=${address}&addressdetails=1`;
+
+                    fetch(url)
+                        .then(response => response.json())
+                        .then(data => {
+                            var suggestions = document.getElementById('suggestions');
+                            suggestions.innerHTML = '';
+                            if (data && data.length > 0) {
+                                data.forEach(function(item) {
+                                    var suggestionItem = document.createElement('div');
+                                    suggestionItem.className = 'suggestion-item';
+                                    suggestionItem.textContent = formatAddress(item.address);
+                                    suggestionItem.onclick = function() {
+                                        map.setView([item.lat, item.lon], 13);
+                                        centerMarker.setLatLng([item.lat, item.lon]);
+                                        document.getElementById('address').value = formatAddress(item.address);
+                                        suggestions.innerHTML = '';
+                                        isManualInput = false;
+                                    };
+                                    suggestions.appendChild(suggestionItem);
+                                });
+                            } else {
+                                suggestions.innerHTML = '<div class="suggestion-item">Адрес не найден</div>';
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Geocoding error: ", error);
+                        });
+                }
+            }, 300);
+        }
+
+        document.getElementById('address').addEventListener('input', function() {
+            isManualInput = true;
+            geocodeAddress();
+        });
+
+        window.onload = function() {
+            getLocation();
+        };
+
+        document.querySelector('input[name="delivery_time"][value="scheduled"]').addEventListener('change', function() {
+            document.getElementById('scheduled-time').style.display = 'block';
+        });
+
+        document.querySelector('input[name="delivery_time"][value="asap"]').addEventListener('change', function() {
+            document.getElementById('scheduled-time').style.display = 'none';
+        });
+    function addAddress() {
+    var form = document.getElementById('address-form');
+    var formData = new FormData(form);
+
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken') // Предполагается, что у вас есть функция для получения CSRF-токена
+        }
+    }).then(response => {
+        // Обработка ответа сервера, если необходимо
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('Ошибка при отправке данных формы');
+        }
+    }).then(data => {
+        // Обработка данных, если необходимо
+        console.log(data);
+        // Перенаправление пользователя или другие действия
+    }).catch(error => {
+        console.error('Ошибка:', error);
+    });
+}
+
+// Функция для получения CSRF-токена из куки
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Находим куку с нужным именем
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                // Получаем значение куки
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+    </script>
 </body>
 </html>

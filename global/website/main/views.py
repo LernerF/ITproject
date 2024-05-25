@@ -421,76 +421,6 @@ def order_history(request):
     return render(request, 'main/order_history.html', context)
 
 
-
-@login_required
-def complete_order(request):
-    try:
-        cart = Cart.objects.get(pk=request.session.get('cart_id'))
-        cart_items = cart.cartitem_set.all()
-        
-        if request.method == 'POST':
-            # Получаем введенное пользователем время доставки
-            delivery_time_str = request.POST.get('delivery_time')
-            if delivery_time_str:
-                # Преобразуем строку времени в объект time
-                delivery_time = datetime.strptime(delivery_time_str, '%H:%M').time()
-                now = timezone.now()
-
-                # Проверяем, что время доставки не раньше текущего времени
-                if delivery_time < now.time():
-                    return render(request, 'main/order_error.html', {'error': 'Вы не можете выбрать время доставки раньше текущего времени.'})
-
-            # Создаем новый заказ
-            order = Order(user=request.user)
-            order.delivery_time = datetime.combine(now.date(), delivery_time)
-            order.save()
-
-            # Перемещаем все элементы из корзины в заказ
-            for item in cart_items:
-                order_item = OrderItem(
-                    order=order,
-                    pizza=item.pizza,
-                    quantity=item.quantity,
-                    price=item.pizza.price * item.quantity
-                )
-                order_item.save()
-                # Копируем информацию об убранных ингредиентах
-                order_item.ingredients.set(item.ingredients.all())
-            
-            # Очищаем корзину
-            cart.cartitem_set.all().delete()
-            del request.session['cart_id']  # Удаляем корзину из сессии
-
-            total_cost = order.get_total_cost()
-            
-            return render(request, 'main/order_complete.html', {
-                'order': order,
-                'order_items': order.orderitem_set.all(),
-                'total_cost': total_cost,
-                'delivery_time': order.delivery_time  # Передаем время доставки в контекст
-            })
-        
-    except Cart.DoesNotExist:
-        return redirect('pizza_list')
-    return redirect('cart')
-
-@login_required
-def time_place(request):
-    if request.method == 'POST':
-        delivery_time_str = request.POST.get('delivery_time')
-        if delivery_time_str:
-            now = timezone.localtime(timezone.now())
-            delivery_time = now.replace(hour=int(delivery_time_str[:2]), minute=int(delivery_time_str[3:5]), second=0, microsecond=0)
-            
-            if delivery_time < now:
-                return redirect('time_place')
-            else:
-                return redirect('complete_order')
-    
-    return render(request, 'main/time_place.html')
-
-
-
 def get_order_status(request, order_id):
     # Получаем заказ по его ID
     order = Order.objects.get(pk=order_id)
@@ -499,3 +429,106 @@ def get_order_status(request, order_id):
         'status': order.status,
     }
     return JsonResponse(data)
+
+
+
+
+
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .forms import OrderForm
+from .models import Cart, CartItem, Order, OrderItem
+
+from django.shortcuts import redirect
+
+def time_place(request):
+    if request.method == 'POST':
+        form = OrderForm(request.POST)
+        if form.is_valid():
+            # Сохраняем данные формы в сессии
+            request.session['order_data'] = form.cleaned_data
+            # Перенаправляем пользователя на страницу завершения заказа
+            return redirect('complete_order')
+        else:
+            # Если данные формы некорректны, возвращаем форму с ошибками
+            return render(request, 'main/time_place.html', {'form': form})
+    else:
+        # Если запрос не POST, просто отображаем пустую форму
+        form = OrderForm()
+        return render(request, 'main/time_place.html', {'form': form})
+
+@login_required
+def complete_order(request):
+    try:
+        print('кораааазина')
+        cart = Cart.objects.get(user=request.user)
+        cart_items = CartItem.objects.filter(cart=cart)
+
+        if not cart_items:
+            messages.error(request, 'Ваша корзина пуста.')
+            return redirect('cart')
+
+        order_data = request.session.get('order_data')
+        if not order_data:
+            messages.error(request, 'Данные заказа не найдены в сессии.')
+            return redirect('time_place')
+        print(request.method)
+        print(request)
+        if request.method == 'POST':
+            
+            form = OrderForm(request.POST)
+            print('1')
+            if form.is_valid():
+                print('2')
+                address = form.save(commit=False)
+                address.user = request.user
+                address.save()
+
+                order = Order(
+                    user=request.user,
+                    address=address.full_address,
+                    latitude=address.latitude,
+                    longitude=address.longitude
+                )
+                order.save()
+
+                for item in cart_items:
+                    OrderItem.objects.create(
+                        order=order,
+                        pizza=item.pizza,
+                        quantity=item.quantity,
+                        price=item.pizza.price * item.quantity
+                    )
+
+                cart_items.delete()  # Очистка корзины после создания заказа
+                del request.session['order_data']
+
+                messages.success(request, 'Заказ успешно завершен.')
+
+                # Передаем общую стоимость заказа и заказанные товары в контекст шаблона
+                total_cost = order.get_total_cost()
+                order_items = order.orderitem_set.all()
+
+                return render(request, 'main/order_complete.html', {
+                    'order': order,
+                    'order_items': order_items,
+                    'total_cost': total_cost
+                })
+            else:
+                print('корзина2')
+                messages.error(request, 'Ошибка в данных формы заказа.')
+                return redirect('time_place')
+        else:
+            print('корзина1')
+            form = OrderForm(initial=order_data)
+            total_cost = sum(item.pizza.price * item.quantity for item in cart_items)
+            return render(request, 'main/complete_order.html', {
+                'order_form': form,
+                'cart_items': cart_items,
+                'total_cost': total_cost
+            })
+    except Cart.DoesNotExist:
+        print('корзина')
+        messages.error(request, 'Корзина не найдена.')
+        return redirect('cart')

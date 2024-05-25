@@ -129,3 +129,20 @@ class OrderItem(models.Model):
     def get_total_price(self):
         return self.quantity * self.pizza.price
 
+
+from django.db import models
+from django.contrib.auth.models import User
+
+class Address(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    full_address = models.CharField(max_length=255, default='Unknown Address')  # Укажите значение по умолчанию
+    entrance = models.CharField(max_length=10, blank=True, null=True)
+    door_code = models.CharField(max_length=10, blank=True, null=True)
+    floor = models.CharField(max_length=10, blank=True, null=True)
+    apartment = models.CharField(max_length=10, blank=True, null=True)
+    comments = models.TextField(blank=True, null=True)
+    latitude = models.FloatField(default=0.0)  # Укажите значение по умолчанию
+    longitude = models.FloatField(default=0.0)  # Укажите значение по умолчанию
+
+    def __str__(self):
+        return self.full_address

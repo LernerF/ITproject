@@ -6,36 +6,23 @@ function sendNotification(orderId, newStatus) {
                     body: `Статус заказа изменен на: ${newStatus}`,
                 });
             }
+        } else {
+            // Выводим Snackbar с уведомлением
+            showSnackbar(`Ваш заказ №${orderId} обновился. Статус заказа изменен на: ${newStatus}`);
         }
     }, 3000)
 }
 
-function updateOrderStatus(orderId) {
-    // Отправляем GET-запрос на сервер для получения статуса заказа
-    $.ajax({
-        url: '/order-history/get-order-status/' + orderId + '/',
-        method: 'GET',
-        success: function(data) {
-            // Определяем следующий этап статуса заказа
-            var nextStatus;
-            switch (data.status) {
-                case 'Готовится':
-                    nextStatus = 'on_the_way';
-                    break;
-                case 'on_the_way':
-                    nextStatus = 'completed';
-                    break;
-                case 'completed':
-                    // Если заказ завершен, прекратить обновление
-                    return;
-            }
-            // Обновляем статус заказа на странице
-            $('#order-status-' + orderId).text(nextStatus);
-        },
-        error: function(error) {
-            console.log('Error fetching order status:', error);
-        }
-    });
+// Функция для отображения Snackbar
+function showSnackbar(message) {
+    // Находим элемент Snackbar на странице
+    var snackbar = document.getElementById("snackbar");
+    // Устанавливаем текст сообщения
+    snackbar.textContent = message;
+    // Показываем Snackbar
+    snackbar.className = "show";
+    // Через 3 секунды скрываем Snackbar
+    setTimeout(function(){ snackbar.className = snackbar.className.replace("show", ""); }, 3000);
 }
 
 $(document).ready(function() {

@@ -15,6 +15,30 @@
             const minutes = now.getMinutes().toString().padStart(2, '0');
             deliveryTimeInput.min = `${hours}:${minutes}`;
         });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const form = document.querySelector("form");
+            form.addEventListener("submit", function(event) {
+                const addressInput = document.getElementById("delivery_address");
+                const address = addressInput.value.trim();
+                
+                // Проверяем, что адрес содержит как минимум два слова
+                const addressWords = address.split(/\s+/);
+                if (addressWords.length < 2) {
+                    alert("Пожалуйста, введите полный адрес доставки, содержащий как минимум два слова.");
+                    event.preventDefault();
+                    return;
+                }
+
+                // Проверяем, что адрес содержит хотя бы одну цифру
+                const containsDigit = /\d/.test(address);
+                if (!containsDigit) {
+                    alert("Пожалуйста, введите адрес, содержащий хотя бы одну цифру.");
+                    event.preventDefault();
+                    return;
+                }
+            });
+        });
     </script>
 </head>
 <body>
@@ -23,6 +47,10 @@
         {% csrf_token %}
         <label for="delivery_time">Время доставки:</label>
         <input type="time" id="delivery_time" name="delivery_time" required>
+
+        <label for="delivery_address">Адрес доставки:</label>
+        <input type="text" id="delivery_address" name="delivery_address" required>
+
         <button type="submit">Оформление заказа</button>
     </form>
 </body>

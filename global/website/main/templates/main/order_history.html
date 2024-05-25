@@ -24,6 +24,10 @@
                     <div class="order-date">
                         {{ order.created_at|date:"d.m.Y H:i" }}
                     </div>
+                    <div class="order-delivery-address">
+                        <span class="address-label">Адрес доставки:</span>
+                        <span class="delivery-address">{{ order.delivery_address }}</span>
+                    </div>
                     <div class="order-details">
                         {% for item in order.items %}
                             <div class="order-item">
@@ -50,7 +54,5 @@
             <a href="{% url 'pizza_list' %}" class="back-to-menu">Вернуться к меню</a>
         </footer>
     </div>
-    <!-- Блок для отображения уведомлений -->
-    <div id="notifications"></div>
 </body>
 </html>

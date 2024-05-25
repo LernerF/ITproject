@@ -108,6 +108,7 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Готовится')
     delivery_time = models.DateTimeField(null=True, blank=True)
+    delivery_address = models.CharField(max_length=100, default='')
 
     def __str__(self):
         return f'Order {self.pk} by {self.user.username}'

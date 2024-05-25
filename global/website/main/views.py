@@ -413,6 +413,7 @@ def order_history(request):
             'id': order.id,
             'created_at': order.created_at,
             'delivery_time': order.delivery_time,
+            'delivery_address': order.delivery_address,  # Добавлен адрес доставки
             'items': item_list,
             'total_cost': order.get_total_cost()
         })
@@ -440,9 +441,15 @@ def complete_order(request):
                 if delivery_time < now.time():
                     return render(request, 'main/order_error.html', {'error': 'Вы не можете выбрать время доставки раньше текущего времени.'})
 
+            # Получаем введенный пользователем адрес доставки
+            delivery_address = request.POST.get('delivery_address')
+            if not delivery_address:
+                return render(request, 'main/order_error.html', {'error': 'Пожалуйста, введите адрес доставки.'})
+
             # Создаем новый заказ
             order = Order(user=request.user)
             order.delivery_time = datetime.combine(now.date(), delivery_time)
+            order.delivery_address = delivery_address
             order.save()
 
             # Перемещаем все элементы из корзины в заказ
@@ -464,10 +471,11 @@ def complete_order(request):
             total_cost = order.get_total_cost()
             
             return render(request, 'main/order_complete.html', {
-                'order': order,
+                'order': order,  # Передаем экземпляр заказа в контекст
                 'order_items': order.orderitem_set.all(),
                 'total_cost': total_cost,
-                'delivery_time': order.delivery_time  # Передаем время доставки в контекст
+                'delivery_time': order.delivery_time,  # Передаем время доставки в контекст
+                'delivery_address': order.delivery_address  # Передаем адрес доставки в контекст
             })
         
     except Cart.DoesNotExist:
@@ -487,7 +495,9 @@ def time_place(request):
             else:
                 return redirect('complete_order')
     
-    return render(request, 'main/time_place.html')
+    # Добавляем адрес доставки в контекст
+    delivery_address = request.session.get('delivery_address', '')  # Получаем адрес доставки из сессии, если он был сохранен
+    return render(request, 'main/time_place.html', {'delivery_address': delivery_address})
 
 
 

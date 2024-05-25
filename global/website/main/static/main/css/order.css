@@ -1,0 +1,42 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+.orders {
+    margin-top: 20px;
+}
+
+.order {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.order p {
+    margin: 5px 0;
+}
+
+.order p strong {
+    font-weight: bold;
+}
+
+/* Optional: Add some styles to enhance the appearance */
+.order p:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.order p:nth-child(odd) {
+    background-color: #f0f0f0;
+}

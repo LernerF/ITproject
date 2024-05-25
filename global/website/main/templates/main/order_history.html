@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>История заказов</title>
+    <link rel="stylesheet" href="{% static 'main/css/order_history.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'main/js/status.js' %}"></script>
+</head>  
+<body>
+    <div class="container">
+        <header>
+            <h1>История заказов</h1>
+        </header>
+        <main>
+            {% for order in orders %}
+                <div class="order-card">
+                    <div class="order-header">
+                        <span class="order-id" data-order-id="{{ order.id }}">Заказ #{{ order.id }} будет в {{ order.delivery_time|date:"H:i" }}</span>
+                        <span id="order-status-{{ order.id }}" class="order-status">{{ order.status }}</span>
+                    </div>
+                    <div class="order-date">
+                        {{ order.created_at|date:"d.m.Y H:i" }}
+                    </div>
+                    <div class="order-details">
+                        {% for item in order.items %}
+                            <div class="order-item">
+                                <img src="{{ item.image_url }}" alt="{{ item.pizza_name }}">
+                                <div class="item-info">
+                                    <div class="item-name">{{ item.pizza_name }}</div>
+                                    {% if item.removed_ingredients %}
+                                        <div class="removed-ingredients">Убранные ингредиенты: {{ item.removed_ingredients|join:", " }}</div>
+                                    {% endif %}
+                                    <div class="item-quantity-price">{{ item.quantity }} x {{ item.price }}₽</div>
+                                </div>
+                                <div class="item-total-price">{{ item.total_price }}₽</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="order-total">
+                        <span class="total-label">Итого:</span>
+                        <span class="total-price">{{ order.total_cost|floatformat:2 }}₽</span>
+                    </div>
+                </div>
+            {% endfor %}
+        </main>
+        <footer>
+            <a href="{% url 'pizza_list' %}" class="back-to-menu">Вернуться к меню</a>
+        </footer>
+    </div>
+    <!-- Блок для отображения уведомлений -->
+    <div id="notifications"></div>
+</body>
+</html>

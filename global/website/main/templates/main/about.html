@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +15,7 @@
 
         <nav>
             <ul>
-                <li><a href="#">Контакты</a></li>
+                <li><a href="/contact">Контакты</a></li>
                 <li><a href="#">Отзывы</a></li>
                 <li><a href="/about">О нас</a></li>
                 <li><a href="#">Меню &Assign;</a>
@@ -24,10 +24,10 @@
                             <a href="{% url 'user_profile' %}">Личный кабинет</a>
                         {% else %}
                             <a href="{% url 'login' %}">Вход</a>
-                            <a href="{% url 'register' %}">Регистрация</a>
+                            <a href="{% url 'register' %}">Регистрация</а>
                         {% endif %}
                         <li><a href="#">Промокоды</a></li>
-                        <li><a href="#">История заказов</a></li>
+                        <li><a href="{% url 'order_history' %}">История заказов</a></li>
                         {% if user.is_authenticated %}
                             <li><a href="#">Выйти</a></li>
                         {% endif %}
@@ -37,13 +37,11 @@
         </nav>
 
     </header>
-    <div class="center">
-        <p>Наши контакты:</p>
-        <ul class="contact-list">
-            <li><a href="https://t.me/+QqGGHGLB_uUzMDcy" class="telegram"><img src="{% static 'main/img/telegram-icon.png' %}" alt="Telegram"> Telegram</a></li>
-            <li><a href="#" class="discord"><img src="{% static 'main/img/discord-icon.png' %}" alt="Discord"> Discord</a></li>
-            <li><a href="https://www.instagram.com/_pizza_galactica_?igsh=bHh6cjFmbmVrcm9m&utm_source=qr" class="instagram"><img src="{% static 'main/img/instagram-icon.png' %}" alt="Instagram"> Instagram</a></li>
-        </ul>
+    <div class="description-container">
+        <h2>О нашем сервисе доставки пиццы</h2>
+        <p>Galactic Pizza предлагает вам самую вкусную и горячую пиццу в городе! Мы используем только свежие и качественные ингредиенты для наших блюд. Наша команда профессиональных поваров и курьеров заботится о том, чтобы вы получили свою пиццу быстро и вовремя.</p>
+        <p>Наше меню включает разнообразные виды пиццы, начиная от классических маргариты и пепперони, до уникальных авторских рецептов. Мы также предлагаем возможность создания собственной пиццы, чтобы удовлетворить все ваши вкусовые предпочтения.</p>
+        <p>Заказывайте у нас и наслаждайтесь вкусной пиццей в любое время дня и ночи! Мы работаем 24/7, чтобы вы могли наслаждаться любимым блюдом в любое время.</p>
     </div>
 </body>
 </html>

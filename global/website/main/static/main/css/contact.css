@@ -1,10 +1,11 @@
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: sans-serif;
     list-style: none;
     text-decoration: none;
+    color: white; /* Устанавливаем белый цвет для всех текстов по умолчанию */
 }
 
 body {
@@ -72,7 +73,6 @@ nav ul li:hover > ul {
     display: initial;
 }
 
-
 .center {
     color: #fff;
     font-size: 25px;
@@ -81,8 +81,47 @@ nav ul li:hover > ul {
     height: 400px;
     position: absolute;
     left: 20%;
-    top: 50%;
-    transform: translate(-50%,-50%);
+    top: 30%; /* Поднял выше */
+    transform: translate(-50%, -30%);
+    padding: 20px;
+    border-radius: 10px;
 }
 
+.contact-list {
+    list-style-type: none;
+    padding: 10px;
+}
 
+.contact-list li {
+    margin-bottom: 10px;
+}
+
+.contact-list a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #fff;
+    padding: 10px;
+}
+
+.contact-list a img {
+    width: 30px; /* Подстройте размеры иконок по необходимости */
+    margin-right: 10px;
+}
+
+.contact-list a:hover {
+    font-weight: bold;
+    color: #ffffff; /* Цвет текста при наведении */
+}
+
+.description-container {
+    background-color: #000; /* Матовый цвет контейнера */
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 600px;
+    position: absolute;
+    bottom: 31%; /* Позиционирование ближе к низу */
+    right: 5%; /* Позиционирование ближе к правому краю */
+    text-align: left;
+    color: 000; /* Белый цвет текста */
+}

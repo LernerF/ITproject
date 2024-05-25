@@ -15,9 +15,9 @@
 
         <nav>
             <ul>
-                <li><a href="#">Контакты</a></li>
+                <li><a href="/contact">Контакты</a></li>
                 <li><a href="#">Отзывы</a></li>
-                <li><a href="about/">О нас</a></li>
+                <li><a href="/about">О нас</a></li>
                 <li><a href="#">Меню &Assign;</a>
                     <ul>
                         {% if user.is_authenticated %}
@@ -38,6 +38,13 @@
 
     </header>
 
-    <p class="center">Наши контакты:</p>
+    <div class="center">
+        <p>Наши контакты:</p>
+        <ul class="contact-list">
+            <li><a href="https://t.me/+QqGGHGLB_uUzMDcy" class="telegram"><img src="{% static 'main/img/telegram-icon.png' %}" alt="Telegram"> Telegram</a></li>
+            <li><a href="#" class="discord"><img src="{% static 'main/img/discord-icon.png' %}" alt="Discord"> Discord</a></li>
+            <li><a href="https://www.instagram.com/_pizza_galactica_?igsh=bHh6cjFmbmVrcm9m&utm_source=qr" class="instagram"><img src="{% static 'main/img/instagram-icon.png' %}" alt="Instagram"> Instagram</a></li>
+        </ul>
+    </div>
 </body>
 </html>

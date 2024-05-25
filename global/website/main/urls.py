@@ -11,18 +11,27 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('', views.index),
     path('register/', register, name='register'),
-    path('reset_password/', reset_password, name='reset_password'),
+    path('reset_password/', views.reset_password, name='reset_password'),
     path('login/', views.login_view, name='login'),
     path('profile/', UserProfileView.as_view(), name='user_profile'),
     path('logout/', views.logout_view, name='logout'),
     path('pizza/', views.pizza_list, name='pizza_list'),
     path('about/', views.about, name='about'),
     path('test/', views.test_login, name='test_login'),
-    path('add_to_cart/<int:pizza_id>/', views.add_to_cart, name='add_to_cart'),
+    path('add_to_cart/<int:pizza_id>/', views.add_to_cart_ajax, name='add_to_cart_ajax'),
     path('remove_from_cart/<int:pizza_id>/', views.remove_from_cart, name='remove_from_cart'),
     path('cart/', views.cart, name='cart'),
     path('go_to_cart/', views.go_to_cart, name='go_to_cart'),
-    path('password_change/<uidb64>/<token>/', views.password_change, name='password_change')
+    path('password_change/<uidb64>/<token>/', views.password_change, name='password_change'),
+    path('settings/', views.settings, name='settings'),
+    path('order/', views.orders, name='order'),
+    path('complete_order/', views.complete_order, name='complete_order'),
+    path('order_history/', views.order_history, name='order_history'),
+    path('time_place/', views.time_place, name='time_place'),
+    path('order-history/get-order-status/<int:order_id>/', views.get_order_status, name='get_order_status'),
+    path('contact/', views.contact, name='contact'),
+    #path('submit_order/', views.submit_order, name='submit_order'),
+    #path('register-success/', views.registration_success, name='registration-success'),
 ]
 
 

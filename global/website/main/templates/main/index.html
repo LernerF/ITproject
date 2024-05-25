@@ -13,7 +13,7 @@
         <a href="" class="logo">Galactic Pizza</a>
         <nav>
             <ul>
-                <li><a href="#contact">Контакты</a></li>
+                <li><a href="contact/">Контакты</a></li>
                 <li><a href="#">Отзывы</a></li>
                 <li><a href="about/">О нас</a></li>
                 <li><a href="#">Меню &Assign;</a>
@@ -26,8 +26,8 @@
                         {% endif %}
                         <li><a href="#">Промокоды</a></li>
 
-                        <li><a href="#">История заказов</a></li>
                         {% if user.is_authenticated %}
+                            <li><a href="{% url 'order_history' %}">История заказов</a></li>
                             <li><a href="logout/">Выйти</a></li>
                         {% endif %}
                     </ul>

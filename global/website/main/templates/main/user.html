@@ -6,8 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Личный кабинет</title>
     <link rel="stylesheet" href="{% static 'main/css/user.css' %}">
+    <!-- Подключение Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
+    <header>
+        <a href="/" class="logo">Galactic Pizza</a>
+    </header>
     <div class="container">
         <div class="profile-card">
             <h1>Личный кабинет</h1>
@@ -20,10 +25,14 @@
                     <strong>Почта: </strong> 
                     <input type="email" class="rounded-input" value="{{ email }}" readonly>
                 </div>
+                <div class="notification-button-container">
+                    <button id='button'>Уведомление</button>
+                </div>
+                <script src="{% static 'main/js/notification.js' %}"></script>
             </div>
-            
 
             <div class="center-wrapper">
+                <a href="/settings" class="settings-button"><i class="fas fa-cog"></i></a>
                 <form action="{% url 'logout' %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="out">Выйти</button>

@@ -1,3 +1,4 @@
+/* General styles */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -6,6 +7,11 @@ body {
 }
 
 h1 {
+    text-align: center;
+    margin-top: 20px;
+}
+
+h2 {
     text-align: center;
     margin-top: 20px;
 }
@@ -28,7 +34,7 @@ li {
     max-width: 200px;
 }
 
-img {
+img.pizza-image {
     display: block;
     width: 100%;
     height: auto;
@@ -44,7 +50,7 @@ p {
     margin: 5px 0;
 }
 
-button {
+button, .edit-btn {
     background-color: #e65c00;
     color: white;
     padding: 10px 20px;
@@ -54,8 +60,8 @@ button {
     transition: background-color 0.3s;
 }
 
-button:hover {
-    background-color: #e65c00;
+button:hover, .edit-btn:hover {
+    background-color: #cc5200;
 }
 
 /* Cart Button */
@@ -89,4 +95,186 @@ button:hover {
 
 .pref:hover {
     transform: scale(1.2);
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000; /* Убедитесь, что z-index больше, чем у других элементов на странице */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8); /* Более темный фон */
+    justify-content: center;
+    align-items: center;
+    pointer-events: all; /* Разрешаем клики внутри модального окна */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 8px;
+    text-align: left;
+    pointer-events: auto; /* Обрабатываем клики внутри модального окна */
+}
+
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-body {
+    display: flex;
+    align-items: center;
+}
+
+.modal img {
+    width: 40%;
+    height: auto;
+    border-radius: 8px;
+    margin-right: 20px;
+}
+
+.modal-text {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+#modal-description {
+    margin: 10px 0;
+}
+
+.ingredients {
+    margin: 10px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.ingredients input[type="checkbox"] {
+    display: none;
+}
+
+.ingredients label {
+    display: block;
+    margin-bottom: 5px;
+    text-decoration: none;
+}
+
+.ingredients input[type="checkbox"]:checked + label {
+    text-decoration: line-through;
+}
+
+.ingredients input[type="checkbox"] + label:before {
+    content: '';
+    position: relative;
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #aaa;
+    border-radius: 4px;
+    background-color: #fff;
+}
+
+.ingredients input[type="checkbox"]:checked + label:before {
+    background-color: #e65c00;
+}
+
+.cart-animation {
+    position: absolute;
+    z-index: 1000;
+    transition: transform 1s ease, opacity 1s ease;
+    width: 50px;
+    height: 50px;
+}
+
+.edit-btn, .add-to-cart-btn {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Убираем текст у кнопки "Добавить в корзину" */
+.add-to-cart-btn {
+    padding: 10px 0;
+    width: 40px; /* Ширина кнопки */
+    height: 40px; /* Высота кнопки */
+    background-color: #e65c00;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    position: relative;
+}
+
+.add-to-cart-btn i {
+    margin-right: 0;
+}
+
+/* Убираем текст у кнопки "Добавить в корзину" при наведении */
+.add-to-cart-btn:hover {
+    background-color: #cc5200;
+}
+
+/* Favorite pizzas styles */
+.favorite-pizzas-section {
+    margin-top: 40px;
+    text-align: center;
+}
+
+.favorite-pizzas-list {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.favorite-pizza-item {
+    border: 2px solid #ff6600; /* Добавляем рамку для выделения любимых пицц */
+    box-shadow: 0 4px 8px rgba(255, 102, 0, 0.2); /* Тень оранжевого цвета */
+}
+
+.favorite-pizza-item h3 {
+    color: #ff6600; /* Оранжевый цвет для названия любимых пицц */
+}
+
+/* Separator styles */
+.separator {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 40px 0;
+    position: relative;
+}
+
+.separator::before, .separator::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background-color: #ccc;
+}
+
+.separator-text {
+    padding: 0 10px;
+    font-size: 24px;
+    color: #555;
+    background-color: #f9f9f9;
 }

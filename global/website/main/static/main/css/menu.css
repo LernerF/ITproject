@@ -3,9 +3,10 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+    background-image: url('../img/background.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 header {
@@ -70,6 +71,7 @@ header .logo:hover {
     border-radius: 10px;
     padding: 10px;
     text-align: center;
+    background-color: white; /* Ensure the pizza card has a white background for readability */
 }
 
 .pizza-card img {
@@ -94,5 +96,3 @@ header .logo:hover {
 .add-to-cart:hover {
     background-color: #ff9e30;
 }
-
-

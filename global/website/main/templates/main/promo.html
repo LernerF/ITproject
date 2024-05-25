@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Акции на доставку пиццы</title>
+    <link rel="stylesheet" href="{% static 'main/css/promo.css' %}">
+</head>
+<body>
+
+<header>
+    <a href="/" class="logo">Galactic Pizza</a>
+    <nav>
+        <ul>
+            <li><a href="#contact">Контакты</a></li>
+            <li><a href="#">Отзывы</a></li>
+            <li><a href="/about">О нас</a></li>
+            <li><a href="#">Меню &Assign;</a>
+                <ul>
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'user_profile' %}">Личный кабинет</a>
+                    {% else %}
+                        <a href="{% url 'login' %}">Вход</a>
+                        <a href="{% url 'register' %}">Регистрация</a>
+                    {% endif %}
+                    <li><a href="/promo">Промокоды</a></li>
+                    <li><a href="#">История заказов</a></li>
+                    {% if user.is_authenticated %}
+                        <li><a href="/logout">Выйти</a></li>
+                    {% endif %}
+                </ul>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<div class="container">
+    <div class="menu">
+        <div class="deal">
+            <h2>Специальное предложение 1</h2>
+            <p>Купите две большие пиццы по цене одной!</p>
+        </div>
+        <div class="deal">
+            <h2>Специальное предложение 2</h2>
+            <p>При заказе любой семейной пиццы получите бесплатный чесночный хлеб!</p>
+        </div>
+        <div class="deal">
+            <h2>Специальное предложение 3</h2>
+            <p>Получите скидку 50% на всю сумму заказа при заказе 3 или более пицц!</p>
+        </div>
+        <div class="deal">
+            <h2>Специальное предложение 4</h2>
+            <p>Бесплатно увеличьте размер любой средней пиццы до большой!</p>
+        </div>
+        <div class="deal">
+            <h2>Специальное предложение 5</h2>
+            <p>Бесплатная доставка для всех заказов свыше $20!</p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

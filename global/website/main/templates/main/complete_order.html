@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <title>Заказ завершен</title>
+    <link rel="stylesheet" href="{% static 'main/css/order_complete.css' %}">
+    <style>
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        li img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin-right: 20px;
+            border-radius: 5px;
+        }
+        .total-cost {
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+        .back-to-menu {
+            display: block;
+            text-align: center;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #ff8c00;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .back-to-menu:hover {
+            background-color: #e07a00;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Ваш заказ успешно завершен!</h1>
+        <h2>Детали заказа:</h2>
+        <ul>
+            {% for item in order_items %}
+                <li>
+                    <img src="{{ item.pizza.image.url }}" alt="{{ item.pizza.name }}">
+                    <div>
+                        <h3>{{ item.pizza.name }}</h3>
+                        <p>Количество: {{ item.quantity }} шт.</p>
+                        <p>Цена за штуку: {{ item.pizza.price }}₽</p>
+                        <p>Итоговая цена: {{ item.price }}₽</p>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <p class="total-cost">Общая сумма заказа: {{ total_cost }}₽</p>
+        <h2>Адрес доставки:</h2>
+        <p>{{ request.session.order_data.full_address }}</p>
+        <p>Подъезд: {{ request.session.order_data.entrance }}</p>
+        <p>Код двери: {{ request.session.order_data.door_code }}</p>
+        <p>Этаж: {{ request.session.order_data.floor }}</p>
+        <p>Квартира: {{ request.session.order_data.apartment }}</p>
+        <p>Комментарий: {{ request.session.order_data.comments }}</p>
+        <p>Спасибо за ваш заказ!</p>
+        <a href="{% url 'pizza_list' %}" class="back-to-menu">Вернуться к меню</a>
+    </div>
+</body>
+</html>

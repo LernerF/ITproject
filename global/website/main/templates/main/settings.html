@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PizzaGalactica</title>
+    <link rel="stylesheet" href="{% static 'main/css/settings.css' %}">
+</head>
+<body>
+    <header>
+        <a href="/" class="logo">Galactic Pizza</a>
+    </header>
+    <div class="button-container">
+        <a href="/profile" class="button">Личный кабинет</a>
+        
+        <div class="form-container">
+            <!-- Форма для изменения имени пользователя -->
+            <form>
+                <label for="username">Имя пользователя:</label>
+                <input type="text" id="username" name="username" value="Текущее имя">
+                <button type="submit">Сохранить изменения</button>
+            </form>
+
+            <!-- Форма для изменения пароля пользователя -->
+            <form>
+                <label for="password">Пароль:</label>
+                <input type="password" id="password" name="password" value="Текущий пароль">
+                <button type="submit">Сохранить изменения</button>
+            </form>
+
+            <!-- Форма для изменения почты пользователя -->
+            <form>
+                <label for="email">Почта:</label>
+                <input type="text" id="email" name="email" value="Текущая почта">
+                <button type="submit">Сохранить изменения</button>
+            </form>
+
+            <!-- Дополнительная форма для изменения имени пользователя -->
+            <form>
+                <label for="additional-username">Доп. имя пользователя:</label>
+                <input type="text" id="additional-username" name="additional-username" value="Дополнительное имя">
+                <button type="submit">Сохранить изменения</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,85 +1,178 @@
-body {
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
   font-family: Arial, sans-serif;
-  background-color: #f0f0f0;
+  list-style: none;
+  text-decoration: none;
+  color: white; /* Устанавливаем белый цвет для всех текстов по умолчанию */
+}
+
+body {
+  background: url('../img/background.png') no-repeat;
+  background-size: cover;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column; /* Добавлено для вертикального выравнивания */
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2% 7%;
+}
+
+header .logo {
+    font-size: 20px;
+    font-weight: 900;
+    color: #fff;
+    transition: .5s;
+    text-decoration: none; /* Убирает подчеркивание ссылки */
+}
+
+header .logo:hover {
+    transform: scale(1.2);
 }
 
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 100vh; /* Высота блока равна высоте видимой части экрана */
+  margin-top: 60px; /* Добавлено для учета фиксированного header */
 }
 
 .profile-card {
-  background-color: #ffffff;
-  height: 500px;
-  width: 400px;
+  background-color: rgba(0, 0, 0, 0.7); /* Матовый цвет контейнера */
   padding: 40px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Выравнивание по вертикали */
+  align-items: center; /* Выравнивание по горизонтали */
 }
 
 h1 {
-  display: block;
+  font-size: 32px;
+  margin-bottom: 20px; /* Отступ снизу */
+  color: #fff; /* Белый цвет текста */
+}
+
+.profile-info {
   width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  background-color: #feb339;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-.profile-info p {
+  margin-top: 20px; /* Добавление верхнего отступа */
   display: flex;
-  justify-content: center; /* Выравнивание по горизонтали */
-  align-items: center;
+  flex-direction: column;
+  align-items: center; /* Центрирование элементов по горизонтали */
 }
 
-.profile-info strong {
-  padding: 10px;
+.info-item {
+  margin-bottom: 20px; /* Отступ снизу */
+  display: flex;
+  justify-content: space-between; /* Горизонтальное выравнивание */
+  align-items: center; /* Вертикальное выравнивание */
+  width: 100%;
+  color: #fff; /* Белый цвет текста */
+}
+
+.info-item strong {
   font-size: 25px;
-  display: flex;
-  justify-content: center; /* Выравнивание по горизонтали */
-  align-items: center;
-  top: 50%;
-  left: 50%;
   color: #feb339;
+  margin-right: 10px;
+}
+
+.rounded-input {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  width: calc(100% - 150px); /* Ширина с учетом отступа от strong */
+}
+
+.rounded-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .center-wrapper {
   display: flex;
-  justify-content: center; /* Выравнивание по горизонтали */
-  align-items: center; /* Выравнивание по вертикали */
-  height: 60vh; /* Высота блока равна высоте видимой части экрана */
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
 }
 
-form {
-  position: relative;; /* Для того чтобы кнопка находилась в строке с текстом */
+.notification-button-container {
+  width: 100%; /* Обеспечение полной ширины для правильного центрирования */
+  display: flex;
+  justify-content: center; /* Центрирование кнопки по горизонтали */
+  margin-top: 20px; /* Добавление верхнего отступа */
+}
+
+#button {
+  background-color: #fa9d24;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+#button:hover {
+  background-color: #feb339;
+  transform: scale(1.05); /* Легкое увеличение при наведении */
+}
+
+.settings-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background-color: orange;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  text-align: center;
+  margin-bottom: 20px;
+  transition: background-color 0.3s, transform 0.3s; /* Переход для плавного увеличения */
+}
+
+.settings-button:hover {
+  transform: scale(1.1); /* Легкое увеличение при наведении */
+}
+
+.settings-button i {
+  font-size: 15px;
 }
 
 button.out {
-  background-color: #fa9d24; /* Зеленый цвет фона */
-  color: white; /* Белый цвет текста */
-  padding: 10px 20px; /* Отступы внутри кнопки */
-  border: none; /* Убираем границу кнопки */
-  border-radius: 5px; /* Скругляем углы */
-  cursor: pointer; /* Изменяем курсор при наведении */
-  font-size: 16px; /* Размер текста */
-  left: 70%;
+  background-color: #fa9d24;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s, transform 0.3s;
 }
 
 button.out:hover {
   background-color: #feb339;
+  transform: scale(1.05); /* Легкое увеличение при наведении */
 }
 
-.info-item text{
-  text-align: center;
-  background-color: #f0f0f0;
-  padding: 10px 20px;
-  font-size: 25px;
-  border-radius: 10px; /* Скругляем углы */
+.logo {
+  font-size: 24px;
+  color: white;
+  margin-top: 20px; /* Отступ сверху */
 }
